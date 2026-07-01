@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Jobs | HireLink Recruiter</title>
+    <link rel="stylesheet" href="{% static 'Recruiter/css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'Recruiter/css/jobs.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="Logo">
+            <h1>HireLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'recruiter_dashboard' %}">Dashboard</a>
+            <a href="{% url 'recruiter_jobs' %}">Jobs</a>
+            <a href="{% url 'recruiter_applicants' %}">Applicants</a>
+            <a href="{% url 'recruiter_interviews' %}">Interviews</a>
+            <a href="{% url 'recruiter_analytics' %}">Analytics</a>
+            <a href="{% url 'recruiter_company_profile' %}">Profile</a>
+            <a href="{% url 'recruiter_settings' %}" class="nav-settings">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+    </nav>
+    <div class="hero-banner">
+        <div class="hero-title-wrapper" style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+            <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="Logo" style="width: 50px; border-radius: 8px;">
+            <h2 style="color: #ffffff; margin: 0;">Manage Your Job Postings-Hire Smarter, Not Harder!</h2>
+        </div>
+        <p style="color: #67e8f9; font-weight: 500; margin-top: 10px;">Find the best talent for your team with ease.</p>
+    </div>
+
+    <main class="container">
+        <section class="form-container">
+            <div class="section-title">
+                <i class="fas fa-paper-plane"></i>
+                <h3>{% if editing_job %}Edit Job Posting{% else %}Create New Posting{% endif %}</h3>
+            </div>
+            <form id="jobForm" class="colorful-form">
+                <div class="input-row">
+                    <div class="field">
+                        <label>Job Title</label>
+                        <input type="text" id="jobTitle" placeholder="e.g. Software Engineer" value="{% if editing_job %}{{ editing_job.title }}{% endif %}" required>
+                    </div>
+                    <div class="field">
+                        <label>Location</label>
+                        <input type="text" id="jobLocation" placeholder="e.g. Remote / Pune" value="{% if editing_job %}{{ editing_job.location }}{% endif %}" required>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="field">
+                        <label>Salary</label>
+                        <input type="text" id="jobSalary" placeholder="e.g. 12 - 15 LPA" value="{% if editing_job %}{{ editing_job.ctc }}{% endif %}">
+                    </div>
+                    <div class="field">
+                        <label>Skills Required</label>
+                        <input type="text" id="jobSkills" placeholder="React, Python, SQL" value="{% if editing_job %}{{ editing_job.skills_required }}{% endif %}">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="field">
+                        <label>Preparation Checklist (Comma separated)</label>
+                        <input type="text" id="jobPrepChecklist" placeholder="e.g. Revise DSA, Prepare HR questions, Bring Resume" value="{% if editing_job %}{{ editing_job.preparation_checklist|join:', ' }}{% endif %}">
+                    </div>
+                    <div class="field">
+                        <label>Deadline Date</label>
+                        <input type="date" id="jobDeadline" value="{% if editing_job %}{{ editing_job.deadline|date:'Y-m-d' }}{% endif %}">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="field">
+                        <label>Minimum CGPA Required</label>
+                        <input type="number" step="0.01" id="min_cgpa" placeholder="e.g. 7.5" value="{% if editing_job %}{{ editing_job.min_cgpa }}{% else %}0.0{% endif %}">
+                    </div>
+                    <div class="field">
+                        <label>Maximum Allowed Backlogs</label>
+                        <input type="number" id="max_backlogs" placeholder="e.g. 0" value="{% if editing_job %}{{ editing_job.max_backlogs }}{% else %}0{% endif %}">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="field">
+                        <label>Minimum 10th Marks (%)</label>
+                        <input type="number" step="0.01" id="min_ssc_marks" placeholder="e.g. 60.0" value="{% if editing_job %}{{ editing_job.min_ssc_marks }}{% else %}0.0{% endif %}">
+                    </div>
+                    <div class="field">
+                        <label>Minimum 12th Marks (%)</label>
+                        <input type="number" step="0.01" id="min_hsc_marks" placeholder="e.g. 60.0" value="{% if editing_job %}{{ editing_job.min_hsc_marks }}{% else %}0.0{% endif %}">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="field">
+                        <label>Shortlist Round Name</label>
+                        <input type="text" id="round_shortlist" placeholder="e.g. Shortlist Round" value="{% if editing_job %}{{ editing_job.workflow.0 }}{% else %}Shortlist Round{% endif %}">
+                    </div>
+                    <div class="field">
+                        <label>Interview Round Name</label>
+                        <input type="text" id="round_interview" placeholder="e.g. Technical Interview" value="{% if editing_job %}{{ editing_job.workflow.1 }}{% else %}Interview Round{% endif %}">
+                    </div>
+                    <div class="field">
+                        <label>Final Selection Round Name</label>
+                        <input type="text" id="round_final" placeholder="e.g. HR & Final Review" value="{% if editing_job %}{{ editing_job.workflow.2 }}{% else %}Final Selection Round{% endif %}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Description</label>
+                    <textarea id="jobDesc" rows="4" placeholder="Describe the role...">{% if editing_job %}{{ editing_job.description }}{% endif %}</textarea>
+                </div>
+                <button type="submit" class="btn-submit">{% if editing_job %}Update Job Opening{% else %}Launch Job Opening{% endif %}</button>
+            </form>
+        </section>
+
+        <section class="listings-section">
+            <div class="section-title">
+                <i class="fas fa-briefcase"></i>
+                <h3>Live Job Listings</h3>
+            </div>
+            
+            <div class="job-grid" id="jobContainer">
+                {% for j_stat in jobs_with_stats %}
+                <div class="job-card" data-id="{{ j_stat.job.id }}">
+                    <div class="job-card-header">
+                        <span class="tag tech">{{ j_stat.job.job_type }}</span>
+                        <div class="actions">
+                            <i class="fas fa-edit edit-icon" onclick="location.href='{% url 'edit_job' j_stat.job.id %}'"></i>
+                            <i class="fas fa-trash delete-icon" onclick="deleteJob({{ j_stat.job.id }}, this)"></i>
+                        </div>
+                    </div>
+                    <h4>{{ j_stat.job.title }}</h4>
+                    <p class="location"><i class="fas fa-map-marker-alt"></i> {{ j_stat.job.location }}</p>
+                    <div class="job-stats">
+                        <div class="stat">
+                            <span class="val">{{ j_stat.applicants_count }}</span>
+                            <span class="lbl">Applicants</span>
+                        </div>
+                        <div class="stat">
+                            <span class="val">{{ j_stat.in_review_count }}</span>
+                            <span class="lbl">In-Review</span>
+                        </div>
+                    </div>
+                    <div class="job-card-footer">
+                        <span class="status-active">● Active</span>
+                        <button class="btn-view" onclick="location.href='{% url 'recruiter_applicants' %}?job_id={{ j_stat.job.id }}'">View Applicants</button>
+                    </div>
+                </div>
+                {% empty %}
+                <p style="grid-column: 1 / -1; text-align: center; color: #666; padding: 20px;">No live job listings found.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer" style="text-align: center; padding: 40px; border-top: 1px solid #ddd; background: #fff;">
+        <div class="footer-centered-wrapper" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+            <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="Logo" style="width: 40px; border-radius: 5px;">
+            <div class="footer-nav" style="display: flex; gap: 20px;">
+                <a href="{% url 'recruiter_dashboard' %}" style="text-decoration: none; color: #666;">Dashboard</a>
+                <a href="{% url 'recruiter_jobs' %}" style="text-decoration: none; color: #666;">Jobs</a>
+                <a href="{% url 'recruiter_applicants' %}" style="text-decoration: none; color: #666;">Applicants</a>
+            </div>
+            <p style="color: #999; font-size: 0.9rem;">&copy; 2026 HireLink Recruiter Portal. Built for excellence.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get Input Values
+            const title = document.getElementById('jobTitle').value;
+            const location = document.getElementById('jobLocation').value;
+            const salary = document.getElementById('jobSalary').value;
+            const skills = document.getElementById('jobSkills').value;
+            const desc = document.getElementById('jobDesc').value;
+
+            const min_cgpa = document.getElementById('min_cgpa').value;
+            const max_backlogs = document.getElementById('max_backlogs').value;
+            const min_ssc_marks = document.getElementById('min_ssc_marks').value;
+            const min_hsc_marks = document.getElementById('min_hsc_marks').value;
+            const round_shortlist = document.getElementById('round_shortlist').value;
+            const round_interview = document.getElementById('round_interview').value;
+            const round_final = document.getElementById('round_final').value;
+
+            const deadline = document.getElementById('jobDeadline').value;
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('location', location);
+            formData.append('ctc', salary);
+            formData.append('skills', skills);
+            formData.append('preparation_checklist', document.getElementById('jobPrepChecklist').value);
+            formData.append('deadline', deadline);
+            formData.append('description', desc);
+            formData.append('min_cgpa', min_cgpa);
+            formData.append('max_backlogs', max_backlogs);
+            formData.append('min_ssc_marks', min_ssc_marks);
+            formData.append('min_hsc_marks', min_hsc_marks);
+            formData.append('round_shortlist', round_shortlist);
+            formData.append('round_interview', round_interview);
+            formData.append('round_final', round_final);
+
+            const url = {% if editing_job %}"/recruiter/job/edit/{{ editing_job.id }}/"{% else %}"/api/jobs/create/"{% endif %};
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    alert({% if editing_job %}"Job opening updated successfully!"{% else %}"Job opening launched successfully!"{% endif %});
+                    window.location.href = "{% url 'recruiter_jobs' %}";
+                } else {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(err => {
+                console.error("Error submitting job:", err);
+                alert("Failed to submit job. Please check your connection.");
+            });
+        });
+
+        function deleteJob(id, element) {
+            if(confirm("Are you sure you want to delete this job posting?")) {
+                fetch(`/api/jobs/delete/${id}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        element.closest('.job-card').remove();
+                    } else {
+                        alert("Error: " + data.error);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error deleting job:", err);
+                    alert("An error occurred.");
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

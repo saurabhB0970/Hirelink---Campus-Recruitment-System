@@ -1,0 +1,228 @@
+/* --- GLOBAL RESET --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+:root {
+    --primary-blue: #2b57f0;
+    --sidebar-bg: #f4f4f4; 
+    --white: #ffffff;
+    --border: #dfe3e8;
+    --bg: #f8f9fa; /* Specific to calendar background */
+}
+
+body {
+    background-color: var(--white);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* --- NAVBAR STYLING (MATCHED TO PROFILE/JOBS) --- */
+.navbar {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    width: auto;
+    margin-left: 45px;
+}
+
+.logo span {
+    font-size: 38px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: white;
+}
+
+.logo img {
+    height: 80px; /* Large logo height as requested */
+}
+
+.nav-links ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin-right: 45px;
+}
+
+.nav-links ul li a {
+    text-decoration: none;
+    color: white; 
+    font-size: 20px;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.nav-links ul li a:hover {
+    opacity: 0.8;
+}
+
+.nav-links li.active a {
+    border-bottom: 2px solid white;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+/* --- CALENDAR LAYOUT --- */
+.calendar-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    background: var(--bg);
+}
+
+.calendar-main {
+    flex: 3;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.cal-nav-btns {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.nav-btn {
+    background: #eee;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.nav-btn:hover {
+    background: #e0e0e0;
+}
+
+.add-event-btn {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-event-btn:hover {
+    background: #1a44cc;
+}
+
+/* --- GRID STYLING --- */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    height: 100%;
+    border: 1px solid var(--border);
+}
+
+.day-label {
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    background: #f4f4f4;
+    border-bottom: 1px solid var(--border);
+    color: #666;
+}
+
+.days-container {
+    display: contents; /* Allows JavaScript to fill the grid */
+}
+
+.date-cell {
+    border: 0.5px solid #f0f0f0;
+    padding: 10px;
+    min-height: 100px;
+    position: relative;
+    background: white;
+    transition: 0.2s;
+}
+
+.date-cell:hover {
+    background: #fcfcfc;
+}
+
+.date-num {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+/* --- EVENT MARKERS ON CALENDAR --- */
+.cal-event-tag { 
+    background: #e7f0ff; 
+    color: var(--primary-blue); 
+    font-size: 11px; 
+    padding: 4px; 
+    border-radius: 4px; 
+    margin-top: 5px;
+    border-left: 3px solid var(--primary-blue);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+}
+
+/* --- EVENT SIDEBAR --- */
+.event-sidebar {
+    flex: 1;
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.event-sidebar h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.event-item {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 5px solid var(--primary-blue);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.event-item h4 {
+    font-size: 15px;
+    color: #222;
+}
+
+.event-item p {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}

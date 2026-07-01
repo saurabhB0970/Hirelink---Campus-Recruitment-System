@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireLink Pro | Hybrid Interview System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <link rel="stylesheet" href="{% static 'Recruiter/css/global.css' %}" />
+  <link rel="stylesheet" href="{% static 'Recruiter/css/interview.css' %}" />
+</head>
+<body class="bg-slate-50">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="Logo">
+            <h1>HireLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'recruiter_dashboard' %}">Dashboard</a>
+            <a href="{% url 'recruiter_jobs' %}">Jobs</a>
+            <a href="{% url 'recruiter_applicants' %}">Applicants</a>
+            <a href="{% url 'recruiter_interviews' %}">Interviews</a>
+            <a href="{% url 'recruiter_analytics' %}">Analytics</a>
+            <a href="{% url 'recruiter_company_profile' %}">Profile</a>
+            <a href="{% url 'recruiter_settings' %}" class="nav-settings">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+    </nav>
+    <main class="max-w-6xl mx-auto p-8">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+            <div>
+                <h2 class="text-3xl font-extrabold text-slate-800">Interview Pipeline</h2>
+                <p class="text-slate-500">Manage Online & On-Campus college drives.</p>
+            </div>
+            <button id="addInterviewBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105">
+                + Schedule Interview
+            </button>
+        </header>
+
+        <div id="interviewList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        </div>
+    </main>
+
+    <div id="scheduleModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-fade-in">
+            <div class="bg-blue-600 p-6 text-white">
+                <h3 class="text-xl font-bold">Schedule Interview</h3>
+                <p class="text-blue-100 text-sm">Select mode to notify candidate accordingly.</p>
+            </div>
+            
+            <form id="interviewForm" class="p-8 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="candidateName" placeholder="Candidate Name" required class="p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none">
+                    <input type="email" id="candidateEmail" placeholder="Candidate Email" required class="p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none">
+                </div>
+                
+                <input type="text" id="position" placeholder="Job Role" required class="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <select id="interviewMode" class="p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none">
+                        <option value="online">🌐 Online</option>
+                        <option value="offline">🏫 On-Campus</option>
+                    </select>
+                    <input type="date" id="interviewDate" required class="p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="time" id="interviewTime" required class="p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none">
+                    <input type="text" id="venue" placeholder="Room No / Block" class="hidden p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none">
+                </div>
+
+                <div id="meetingBox" class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-slate-200">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Auto-Generated Meeting Link</label>
+                    <input type="text" id="meetingLink" readonly class="w-full bg-transparent text-blue-600 font-mono text-xs outline-none mt-1">
+                </div>
+
+                <div class="field">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Preparation Checklist (Comma separated)</label>
+                    <textarea id="preparationChecklist" placeholder="e.g. Revise DSA, Prepare HR questions, Bring Resume" class="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none" rows="2"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-4 mt-4">
+                    <button type="button" id="closeModal" class="px-6 py-3 font-semibold text-slate-400">Cancel</button>
+                    <button type="submit" id="submitBtn" class="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700 transition">
+                        Send Invite
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.backendInterviews = {{ interviews_json|safe }};
+        
+        // Helper to get CSRF cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    <script src="{% static 'Recruiter/js/interview.js' %}"></script>
+</body>
+</html>

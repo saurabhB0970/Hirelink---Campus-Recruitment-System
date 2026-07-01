@@ -1,0 +1,176 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #2563eb;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 85px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 100px;
+    margin-left: 45px;
+    
+}
+
+.logo span {
+    font-size: 38px;
+    font-weight: bold;
+    
+}
+
+h1 span {
+    font-weight: 700;
+    
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+}
+
+.signup-btn {
+    background-color: #ff7a18;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-right: 45px;
+}
+/* ======================
+   INSTITUTE INTRO
+====================== */
+
+.institute-intro {
+    background-color: #f0f6ff;   /* Same theme family */
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.institute-intro img {
+    width: 70%;
+    max-width: 900px;
+    border-radius: 25px;
+    margin-bottom: 25px;
+}
+
+.institute-intro h1 {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.institute-intro p {
+    font-size: 18px;
+    color: #555;
+}
+
+
+/* ======================
+   ABOUT SECTION
+====================== */
+
+.institute-about {
+    background-color: #ffffff;
+    padding: 80px 20px;
+}
+
+.institute-container {
+    max-width: 1000px;
+    margin: auto;
+    text-align: center;
+}
+
+
+.institute-about h2,
+.institute-placement h2 {
+    font-size: 30px;
+    color: white;
+    margin-bottom: 30px;
+}
+
+.institute-about h2{
+    color:black;
+}
+
+.institute-about p {
+    font-size: 17px;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+
+/* ======================
+   PLACEMENT SECTION
+====================== */
+
+.institute-placement {
+    background-color: #222;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.placement-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.placement-card {
+    background: #fff;
+    padding: 30px;
+    height: 170px;
+    width: 290px;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease;
+}
+
+.placement-card h3 {
+    font-size: 28px;
+    color: #ff7a00;
+    margin-bottom: 10px;
+}
+
+.placement-card p {
+    font-size: 20px;
+    color: #555;
+}
+
+.placement-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.recruiters {
+    font-size: 16px;
+    color: white;
+    margin-top: 15px;
+}

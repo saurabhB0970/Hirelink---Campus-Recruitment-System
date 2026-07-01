@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HireLink - Connecting Students with Opportunities</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'Student/css/style.css' %}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'institute' %}">Institute</a></li>
+                <li><a href="{% url 'recruiter_landing' %}">Recruiter</a></li>
+                <li><a href="{% url 'admin_landing' %}">Admin</a></li>
+                <li><a href="{% url 'student_landing' %}">Student</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.user_type == 'student' %}
+                        <li><a href="{% url 'student_profile' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'recruiter' %}
+                        <li><a href="{% url 'recruiter_dashboard' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'institute' %}
+                        <li><a href="{% url 'admin_portal' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}" class="signup-btn">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="signup-btn">Sign up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1><em>
+                Connecting Students<br>
+                <span>With Opportunities,</span><br>
+                Smoothly</em>
+            </h1>
+
+            <p>
+                HireLink helps fresh graduates get placed faster,
+                connects companies with the right talent,
+                and empowers colleges with smart placement analytics
+            </p>
+
+            <a href="{% url 'role_selector' %}" class="btn">Get Started</a>
+        </div>
+
+        <div class="hero-image">
+            <img src="{% static 'Student/assets/two_man.png' %}" alt="Hero Illustration">
+        </div>
+    </section>
+
+    <footer class="hirelink-footer">
+        <div class="footer-content">
+            <p>© 2026 <strong>HireLink</strong> | Final Year Project</p>
+            <p>Department of Computer Engineering</p>
+            <p>K J College of Engineering and Management Research, Pune</p>
+        </div>
+    </footer>
+</body>
+</html>

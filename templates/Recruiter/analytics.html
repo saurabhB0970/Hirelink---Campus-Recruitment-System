@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics & Reports | HireLink Recruiter</title>
+    <link rel="stylesheet" href="{% static 'Recruiter/css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'Recruiter/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'Recruiter/css/analytics.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="HireLink logo" class="w-10 h-10 md:w-12 md:h-12 rounded object-contain">
+            <h1>HireLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'recruiter_dashboard' %}">Dashboard</a>
+            <a href="{% url 'recruiter_jobs' %}">Jobs</a>
+            <a href="{% url 'recruiter_applicants' %}">Applicants</a>
+            <a href="{% url 'recruiter_interviews' %}">Interviews</a>
+            <a href="{% url 'recruiter_analytics' %}">Analytics</a>
+            <a href="{% url 'recruiter_company_profile' %}">Profile</a>
+            <a href="{% url 'recruiter_settings' %}" class="nav-settings">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <header class="page-header">
+            <h1>📊 Analytics & Reports</h1>
+            <p>Placement Season 2026: Comprehensive Performance Metrics</p>
+        </header>
+
+        <section class="analytics-cards">
+            <div class="card border-blue">
+                <h3>Active Jobs</h3>
+                <p class="number">{{ active_jobs }}</p>
+            </div>
+            <div class="card border-purple">
+                <h3>Total Apps</h3>
+                <p class="number">{{ total_apps }}</p>
+            </div>
+            <div class="card border-yellow">
+                <h3>Interviews</h3>
+                <p class="number">{{ interviews_count }}</p>
+            </div>
+            <div class="card border-green">
+                <h3>Total Placed</h3>
+                <p class="number">{{ total_placed }}</p>
+            </div>
+        </section>
+
+        <div class="charts-row">
+            <section class="chart-box">
+                <h2>Hiring Funnel</h2>
+                <div class="canvas-wrapper">
+                    <canvas id="funnelChart"></canvas>
+                </div>
+            </section>
+
+            <section class="chart-box">
+                <h2>Hires by Department</h2>
+                <div class="canvas-wrapper">
+                    <canvas id="deptChart"></canvas>
+                </div>
+            </section>
+        </div>
+
+        <section class="chart-box full-width">
+            <h2>Monthly Placement Trend</h2>
+            <div class="canvas-wrapper trend-height">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.funnelData = {{ funnel_data|safe }};
+        window.deptLabels = {{ dept_labels|safe }};
+        window.deptData = {{ dept_data|safe }};
+        window.trendData = {{ trend_data|safe }};
+    </script>
+    <script src="{% static 'Recruiter/js/chart-setup.js' %}"></script>
+</body>
+</html>

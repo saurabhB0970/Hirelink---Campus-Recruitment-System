@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Company Profile | HireLink Recruiter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'Recruiter/css/global.css' %}" />
+  <link rel="stylesheet" href="{% static 'Recruiter/css/style.css' %}" />
+</head>
+<body>
+ 
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center bg-blue-600 p-4 text-white">
+    <div class="flex items-center space-x-2">
+      <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="HireLink logo" class="w-12 h-12 rounded object-cover">
+      <h1 class="text-xl font-bold">HireLink Recruiter</h1>
+    </div>
+
+    <div class="space-x-4">
+      <a href="{% url 'recruiter_dashboard' %}" class="font-semibold underline">Dashboard</a>
+      <a href="{% url 'recruiter_jobs' %}">Jobs</a>
+      <a href="{% url 'recruiter_applicants' %}">Applicants</a>
+      <a href="{% url 'recruiter_interviews' %}">Interviews</a>
+      <a href="{% url 'recruiter_analytics' %}">Analytics</a>
+      <a href="{% url 'recruiter_company_profile' %}">Profile</a>
+      <a href="{% url 'recruiter_settings' %}">Settings</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="profile-container">
+      <h2 class="section-title">🏢 Company Profile</h2>
+
+      {% if messages %}
+      <div class="message-container" style="margin-bottom: 20px;">
+          {% for message in messages %}
+          <div style="padding: 10px; border-radius: 5px; {% if message.tags == 'success' %}background-color: #d4edda; color: #155724;{% else %}background-color: #f8d7da; color: #721c24;{% endif %}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+
+      <form id="companyProfileForm" class="profile-form" method="POST" action="{% url 'recruiter_company_profile' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="companyName">Company Name</label>
+          <input type="text" id="companyName" name="companyName" placeholder="Enter company name" value="{{ profile.company_name }}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="logoUpload">Company Logo</label>
+          <input type="file" id="logoUpload" name="logoUpload" accept="image/*" />
+          <img id="logoPreview" src="{% if profile.logo %}{{ profile.logo.url }}{% else %}{% static 'Recruiter/assets/logo.jpeg' %}{% endif %}" alt="Logo Preview" class="logo-preview" style="max-height: 80px; margin-top: 10px;" />
+        </div>
+
+        <div class="form-group">
+          <label for="companyDescription">Description</label>
+          <textarea id="companyDescription" name="companyDescription" rows="4" placeholder="Brief description about your company">{{ profile.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">HR Contact Email</label>
+          <input type="email" id="contactEmail" name="contactEmail" placeholder="hr@yourcompany.com" value="{{ profile.company_email }}" />
+        </div>
+
+        <div class="form-group">
+          <label for="smtpEmail">SMTP Sending Email</label>
+          <input type="email" id="smtpEmail" name="smtpEmail" placeholder="your-email@gmail.com" value="{{ profile.email|default:profile.user.email }}" />
+        </div>
+
+        <div class="form-group">
+          <label for="gmailAppPassword">Gmail App Password</label>
+          <input type="password" id="gmailAppPassword" name="gmailAppPassword" placeholder="Enter Gmail App Password" value="{{ profile.gmail_app_password|default:'' }}" />
+        </div>
+
+        <div class="form-group">
+          <label for="departments">Departments / Roles Offered</label>
+          <input type="text" id="departments" name="departments" placeholder="e.g., Software Engineer, Data Analyst" value="Software Engineer, QA Engineer, Data Analyst" />
+        </div>
+
+        <div class="form-group">
+          <label for="brochureUpload">Upload Brochure</label>
+          <input type="file" id="brochureUpload" name="brochureUpload" accept=".pdf,.docx" />
+          {% if profile.brochure %}
+            <p style="margin-top: 10px; font-size: 0.9em; color: #555;">Current: <a href="{{ profile.brochure.url }}" target="_blank" style="color: blue; underline: true;">Download Brochure</a></p>
+          {% endif %}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Save Profile</button>
+          <button type="reset" class="btn-secondary">Reset</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // --- JS for image preview ---
+    document.getElementById("logoUpload").addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      const preview = document.getElementById("logoPreview");
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+</body>
+</html>

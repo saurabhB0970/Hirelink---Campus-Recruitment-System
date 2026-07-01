@@ -1,0 +1,90 @@
+/* ================= GLOBAL SETTINGS ================= */
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body { background: #f8fafc; color: #333; }
+
+/* ================= NAVBAR STYLING ================= */
+.navbar-main {
+    background-color: #2563eb;
+    padding: 1rem 2rem;
+    color: white;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-brand { display: flex; align-items: center; gap: 12px; }
+.logo { width: 45px; height: 45px; border-radius: 8px; }
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-size: 0.95rem;
+}
+
+.active-link { text-decoration: underline; font-weight: bold; }
+
+/* ================= ANALYTICS CONTENT ================= */
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header { margin-bottom: 2rem; }
+
+/* KPI CARDS */
+.analytics-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.card h3 { font-size: 0.85rem; color: #64748b; margin-bottom: 10px; text-transform: uppercase; }
+.card .number { font-size: 2rem; font-weight: 800; color: #1e293b; }
+
+.border-blue { border-bottom: 5px solid #3b82f6; }
+.border-purple { border-bottom: 5px solid #8b5cf6; }
+.border-yellow { border-bottom: 5px solid #f59e0b; }
+.border-green { border-bottom: 5px solid #10b981; }
+
+/* CHARTS LAYOUT */
+.charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.chart-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.chart-box h2 { font-size: 1.1rem; margin-bottom: 20px; color: #334155; }
+.full-width { margin-top: 30px; }
+.canvas-wrapper { position: relative; height: 300px; }
+.trend-height { height: 350px; }
+
+@media (max-width: 900px) {
+    .charts-row { grid-template-columns: 1fr; }
+}

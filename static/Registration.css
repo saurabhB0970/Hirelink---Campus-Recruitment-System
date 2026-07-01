@@ -1,0 +1,466 @@
+register.css                          /* ============================================
+   REGISTER PAGE STYLES
+   ============================================ */
+
+/* Register Container */
+.register-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 85px - 60px);
+    background: linear-gradient(135deg, #f0f6ff 0%, #e8f1ff 100%);
+    padding: 40px 20px;
+}
+
+.register-wrapper {
+    display: flex;
+    gap: 40px;
+    max-width: 1400px;
+    width: 100%;
+    align-items: flex-start;
+}
+
+/* Register Form Section */
+.register-form-section {
+    background: white;
+    padding: 50px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    max-width: 600px;
+}
+
+.register-header h2 {
+    font-size: 32px;
+    color: #2563eb;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.register-header p {
+    color: #6b7280;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+/* User Type Selector */
+.user-type-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.type-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 15px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    color: #6b7280;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.type-btn:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.type-btn.active {
+    background-color: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+/* Register Form */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 12px 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #9ca3af;
+}
+
+/* Field Groups - Hidden by default, shown based on user type */
+.field-group {
+    display: none;
+    animation: slideDown 0.3s ease;
+}
+
+.field-group.active-fields {
+    display: contents;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Password Hint */
+.password-hint {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Checkbox Group */
+.form-group.checkbox label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-weight: normal;
+    margin-bottom: 0;
+}
+
+.form-group.checkbox input[type="checkbox"] {
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
+    cursor: pointer;
+}
+
+.form-group.checkbox a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.form-group.checkbox a:hover {
+    text-decoration: underline;
+}
+
+/* Register Button */
+.register-btn {
+    background-color: #ff7a18;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.register-btn:hover {
+    background-color: #bf5b14;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 122, 24, 0.3);
+}
+
+.register-btn:active {
+    transform: translateY(0);
+}
+
+.register-btn:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Register Footer */
+.register-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.login-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-link:hover {
+    color: #1e40af;
+    text-decoration: underline;
+}
+
+/* Info Section */
+.register-info-section {
+    flex: 1;
+    min-width: 300px;
+}
+
+.info-box {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.info-box h3 {
+    font-size: 28px;
+    color: #1f2937;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.benefits-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.benefits-list li {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.benefits-list .icon {
+    font-size: 24px;
+    color: #10b981;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.benefits-list h4 {
+    font-size: 16px;
+    color: #1f2937;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.benefits-list p {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+/* Messages */
+.success-message,
+.error-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+.success-message {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.error-message {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: inherit;
+    padding: 0;
+}
+
+.close-btn:hover {
+    opacity: 0.7;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .register-wrapper {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .register-form-section,
+    .register-info-section {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .register-container {
+        min-height: auto;
+        padding: 20px;
+    }
+
+    .register-form-section {
+        padding: 30px 25px;
+    }
+
+    .register-header h2 {
+        font-size: 26px;
+    }
+
+    .user-type-selector {
+        gap: 8px;
+    }
+
+    .type-btn {
+        min-width: 100px;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .info-box {
+        padding: 25px 20px;
+    }
+
+    .info-box h3 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .benefits-list li {
+        gap: 10px;
+    }
+
+    .benefits-list h4 {
+        font-size: 15px;
+    }
+
+    .benefits-list p {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-form-section {
+        padding: 20px 15px;
+    }
+
+    .register-header h2 {
+        font-size: 22px;
+    }
+
+    .register-header p {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .user-type-selector {
+        gap: 6px;
+        margin-bottom: 20px;
+    }
+
+    .type-btn {
+        min-width: 80px;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .password-hint {
+        font-size: 11px;
+    }
+
+    .info-box {
+        display: none;
+    }
+
+    .navbar {
+        height: auto;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .nav-links a {
+        font-size: 14px;
+    }
+
+    .register-footer {
+        font-size: 12px;
+    }
+}
+
+.field-group{
+    display:none;
+}
+
+.active-fields{
+    display:block;
+}
+
+.type-btn.active{
+    background:#2563eb;
+    color:white;
+    border:none;
+}

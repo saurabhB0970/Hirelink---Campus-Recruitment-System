@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings | HireLink Recruiter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'Recruiter/css/global.css' %}" />
+  <link rel="stylesheet" href="{% static 'Recruiter/css/style.css' %}" />
+</head>
+<body>
+  
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="HireLink logo" class="w-10 h-10 md:w-12 md:h-12 rounded object-contain">
+            <h1>HireLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'recruiter_dashboard' %}">Dashboard</a>
+            <a href="{% url 'recruiter_jobs' %}">Jobs</a>
+            <a href="{% url 'recruiter_applicants' %}">Applicants</a>
+            <a href="{% url 'recruiter_interviews' %}">Interviews</a>
+            <a href="{% url 'recruiter_analytics' %}">Analytics</a>
+            <a href="{% url 'recruiter_company_profile' %}">Profile</a>
+            <a href="{% url 'recruiter_settings' %}" class="nav-settings">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+    </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="settings-container">
+      <h2 class="section-title">⚙️ Account Settings</h2>
+
+      {% if messages %}
+      <div class="message-container" style="margin-bottom: 20px;">
+          {% for message in messages %}
+          <div style="padding: 10px; border-radius: 5px; {% if message.tags == 'success' %}background-color: #d4edda; color: #155724;{% else %}background-color: #f8d7da; color: #721c24;{% endif %}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Change Password Section -->
+      <div class="settings-card">
+        <h3>Change Password</h3>
+        <form id="changePasswordForm" class="settings-form" method="POST" action="{% url 'recruiter_settings' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password" required />
+          </div>
+
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password" required />
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm New Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter new password" required />
+          </div>
+
+          <button type="submit" class="btn-primary">Update Password</button>
+        </form>
+      </div>
+
+      <!-- Notification Preferences -->
+      <div class="settings-card">
+        <h3>Notification Preferences</h3>
+        <form id="notificationSettings">
+          <label class="checkbox-label">
+            <input type="checkbox" checked /> Email Notifications
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" /> Interview Reminders
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" checked /> Application Status Updates
+          </label>
+        </form>
+      </div>
+
+      <!-- Manage HR Team -->
+      <div class="settings-card">
+        <h3>Manage Recruiter Team</h3>
+        <table class="hr-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="hrTeam">
+            <tr>
+              <td>Priya Sharma</td>
+              <td>priya@hirelink.com</td>
+              <td>HR Manager</td>
+              <td><button class="btn-secondary remove-btn">Remove</button></td>
+            </tr>
+            <tr>
+              <td>Rahul Mehta</td>
+              <td>rahul@hirelink.com</td>
+              <td>Recruiter</td>
+              <td><button class="btn-secondary remove-btn">Remove</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button class="btn-primary add-member-btn">+ Add New Member</button>
+      </div>
+
+      <!-- Logout -->
+      <div class="settings-card logout-section">
+        <button class="btn-danger" id="logoutBtn">🚪 Logout</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Remove HR Member
+    document.querySelectorAll(".remove-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        btn.closest("tr").remove();
+      });
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      alert("You have logged out successfully!");
+      window.location.href = "{% url 'logout' %}";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Landing - HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/recruiter.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'institute' %}">Institute</a></li>
+                <li><a href="{% url 'recruiter_landing' %}">Recruiter</a></li>
+                <li><a href="{% url 'admin_landing' %}">Admin</a></li>
+                <li><a href="{% url 'student_landing' %}">Student</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.user_type == 'student' %}
+                        <li><a href="{% url 'student_profile' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'recruiter' %}
+                        <li><a href="{% url 'recruiter_dashboard' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'institute' %}
+                        <li><a href="{% url 'admin_portal' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}" class="signup-btn">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="signup-btn">Sign up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <section class="recruiter-hero">
+        <h1>Hire Top Talent Efficiently</h1>
+        <p>Connect with skilled students from verified institutes and streamline your hiring process.</p>
+        <a href="{% url 'register' %}?type=recruiter" class="btn">Sign Up</a>
+    </section>
+    
+    <section class="recruiter-features">
+        <h2>Features for Recruiters</h2>
+        <div class="feature-cards">
+            <div class="card">
+                <h3>Post Job Openings</h3>
+                <p>Easily create and manage job postings for various roles.</p>
+            </div>
+            <div class="card">
+                <h3>Access Student Profiles</h3>
+                <p>View verified resumes and skill sets of candidates.</p>
+            </div>
+            <div class="card">
+                <h3>Track Applications</h3>
+                <p>Monitor applicant status and shortlist candidates efficiently.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="recruiter-cta">
+        <h2>Start Hiring Today</h2>
+        <p>Join HireLink and connect with talented graduates instantly.</p>
+        <a href="{% url 'role_selector' %}" class="btn">Get Started</a>
+    </section>
+</body>
+</html>

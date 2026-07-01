@@ -1,0 +1,622 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPO Master Console | University Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --tpo-blue: #1e3a8a; --tpo-orange: #ff8533; }
+        .bg-tpo-blue { background-color: var(--tpo-blue); }
+        .bg-tpo-orange { background-color: var(--tpo-orange); }
+        .text-tpo-orange { color: var(--tpo-orange); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .table-responsive::-webkit-scrollbar { height: 6px; }
+        .table-responsive::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans">
+
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-72 bg-tpo-blue text-white hidden lg:flex flex-col shadow-2xl z-30">
+            <div class="p-6 border-b border-blue-900/50 flex flex-col items-center">
+                <div class="bg-white p-2 rounded-xl mb-3 shadow-lg">
+                    <img src="{% static 'logo.jpeg' %}" alt="Logo" class="h-14 w-auto object-contain">
+                </div>
+                <h1 class="text-xs font-black tracking-widest uppercase text-blue-200 text-center"> Admin Dashboard</h1>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-2 mt-4">
+                <button onclick="openTab(event, 'dash')" class="tab-link active w-full flex items-center p-3 bg-tpo-orange text-white rounded-xl shadow-lg transition-all">
+                    <i class="fas fa-chart-line mr-3 w-6 text-center"></i><span class="font-bold text-sm">Overview</span>
+                </button>
+                <button onclick="openTab(event, 'students')" class="tab-link w-full flex items-center p-3 text-blue-100 hover:bg-blue-800 rounded-xl transition-all">
+                    <i class="fas fa-user-graduate mr-3 w-6 text-center"></i><span class="font-bold text-sm">Student Status</span>
+                </button>
+                <button onclick="openTab(event, 'drives')" class="tab-link w-full flex items-center p-3 text-blue-100 hover:bg-blue-800 rounded-xl transition-all">
+                    <i class="fas fa-briefcase mr-3 w-6 text-center"></i><span class="font-bold text-sm">Placement Drives</span>
+                </button>
+                <button onclick="openTab(event, 'selection-report')" class="tab-link w-full flex items-center p-3 text-blue-100 hover:bg-blue-800 rounded-xl transition-all">
+                    <i class="fas fa-file-invoice mr-3 w-6 text-center"></i><span class="font-bold text-sm">Selection Reports</span>
+                </button>
+                <button onclick="openTab(event, 'alumni')" class="tab-link w-full flex items-center p-3 text-blue-100 hover:bg-blue-800 rounded-xl transition-all">
+                    <i class="fas fa-graduation-cap mr-3 w-6 text-center"></i><span class="font-bold text-sm">Alumni</span>
+                </button>
+                <button onclick="openTab(event, 'companies')" class="tab-link w-full flex items-center p-3 text-blue-100 hover:bg-blue-800 rounded-xl transition-all">
+                    <i class="fas fa-building mr-3 w-6 text-center"></i><span class="font-bold text-sm">Companies</span>
+                </button>
+                <button id="post-job-tab-btn" onclick="location.href='{% url 'admin_post_job' %}'" class="tab-link w-full flex items-center p-3 text-blue-100 hover:bg-blue-800 rounded-xl transition-all">
+                    <i class="fas fa-plus-circle mr-3 w-6 text-center"></i><span class="font-bold text-sm">Post Job</span>
+                </button>
+            </nav>
+
+            <div class="p-6 bg-blue-950/50 flex items-center border-t border-blue-900 mt-auto">
+                <div class="w-10 h-10 rounded-full bg-tpo-orange flex items-center justify-center font-bold mr-3 shadow-lg">AD</div>
+                <div class="text-xs">
+                    <p class="font-bold">Admin Panel</p>
+                    <button onclick="location.href='{% url 'logout' %}'" class="text-blue-300 hover:text-white transition">Sign Out <i class="fas fa-sign-out-alt ml-1"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <header class="bg-white border-b border-slate-200 h-20 flex items-center justify-between px-8 shrink-0">
+                <h2 id="tab-title" class="text-xl font-black text-slate-800 uppercase tracking-tight">Overview</h2>
+                <div class="flex items-center space-x-6">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-[10px] font-black text-slate-400 uppercase">Current Session</p>
+                        <p class="text-sm font-bold text-tpo-blue">2025-2026</p>
+                    </div>
+                    <button onclick="location.href='{% url 'admin_post_job' %}'" class="bg-tpo-orange text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md hover:opacity-90 transition">
+                        <i class="fas fa-plus mr-2"></i> New Drive
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-6 md:p-8">
+
+                <div id="dash" class="tab-content active">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Students</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ total_students }}</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Recruiters</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ total_recruiters }}</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Companies</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ total_companies }}</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Jobs</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ active_jobs_count }}</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Applications</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ total_applications }}</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-b-blue-500">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Shortlisted</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ total_shortlisted }}</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-b-orange-400">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Interviews</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ total_interviews }}</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-b-green-500">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Hired</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ total_hired }}</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-b-red-500">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rejected</p>
+                            <h3 class="text-3xl font-black text-slate-800">{{ total_rejected }}</h3>
+                        </div>
+                        <div class="bg-tpo-blue p-6 rounded-2xl shadow-lg text-white">
+                            <p class="text-[10px] font-black text-blue-300 uppercase tracking-widest">Placement Rate</p>
+                            <h3 class="text-3xl font-black">{{ rate }}%</h3>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100"><canvas id="barChart" height="150"></canvas></div>
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex justify-center"><div class="w-64"><canvas id="pieChart"></canvas></div></div>
+                    </div>
+                </div>
+
+                <div id="students" class="tab-content">
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="p-6 bg-slate-50 border-b border-slate-100 flex flex-wrap justify-between items-center gap-4">
+                            <h4 class="font-bold text-slate-800 uppercase text-sm">Student Enrollment Records</h4>
+                            <div class="flex gap-2">
+                                <input type="text" id="studentInput" onkeyup="filterStudents()" placeholder="Search Name/Department..." class="text-sm px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-tpo-orange w-64">
+                                <select class="text-sm px-4 py-2 border rounded-xl bg-white"><option>All Dept</option><option>CSE</option><option>ECE</option></select>
+                            </div>
+                        </div>
+                        <div class="table-responsive overflow-x-auto">
+                            <table class="w-full text-left" id="studentMasterTable">
+                                <thead class="bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    <tr>
+                                        <th class="px-8 py-4">Student Name</th>
+                                        <th class="px-8 py-4">Department</th>
+                                        <th class="px-8 py-4">CGPA</th>
+                                        <th class="px-8 py-4">Status</th>
+                                        <th class="px-8 py-4 text-right">Manage Round</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm divide-y divide-slate-100">
+                                    {% for student in students_list %}
+                                    <tr class="hover:bg-slate-50 transition-all">
+                                        <td class="px-8 py-4 font-bold text-slate-700">{{ student.name }}</td>
+                                        <td class="px-8 py-4 uppercase">{{ student.dept }}</td>
+                                        <td class="px-8 py-4 italic font-bold">{{ student.cgpa }}</td>
+                                        <td class="px-8 py-4">
+                                            <span class="px-3 py-1 
+                                                {% if student.status_class == 'Placed' %}bg-green-100 text-green-700
+                                                {% elif student.status_class == 'Ongoing' %}bg-blue-100 text-blue-700
+                                                {% else %}bg-orange-100 text-tpo-orange{% endif %} 
+                                                rounded-full text-[10px] font-black uppercase tracking-tighter">
+                                                {{ student.status }}
+                                            </span>
+                                        </td>
+                                        <td class="px-8 py-4 text-right">
+                                            <button onclick="openModal('{{ student.name }}', '{% if student.status_class == 'Ongoing' %}Technical{% elif student.status_class == 'Placed' %}Selected{% else %}Unplaced{% endif %}')" class="bg-blue-50 text-tpo-blue px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-tpo-blue hover:text-white transition-all">
+                                                <i class="fas fa-tasks mr-1"></i> Manage
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr><td colspan="5" class="px-8 py-4 text-center">No student records found.</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="drives" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {% for drive in drives %}
+                        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all border-t-4 {% if drive.status == 'Active' %}border-t-tpo-orange{% else %}border-t-green-500{% endif %}">
+                            <div class="p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="h-12 w-12 bg-slate-50 border rounded-xl flex items-center justify-center font-bold text-tpo-blue">{{ drive.company_name|slice:":1" }}</div>
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase rounded-lg italic">{{ drive.date }}</span>
+                                </div>
+                                <h4 class="font-black text-slate-800 text-lg">{{ drive.title|default:drive.company_name }}</h4>
+                                <p class="text-xs text-slate-400 mb-6">Eligible: {{ drive.eligibility }}</p>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between text-xs font-bold"><span>Applications</span><span class="text-tpo-blue">{{ drive.applied_count }}/{{ drive.max_applications }}</span></div>
+                                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                        <div class="{% if drive.status == 'Active' %}bg-tpo-orange{% else %}bg-green-500{% endif %} h-full" style="width: {% widthratio drive.applied_count drive.max_applications 100 %}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p style="grid-column: 1 / -1; text-align: center; color: #666;">No placement drives found.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div id="selection-report" class="tab-content">
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 flex flex-col items-center">
+                        <div class="text-center mb-8">
+                            <h3 class="text-2xl font-black text-slate-800">Round-wise Selection Funnel</h3>
+                            <p class="text-sm text-slate-400 mt-2">Data based on active sessions</p>
+                        </div>
+                        <div class="w-full lg:w-3/4"><canvas id="roundChart" height="100"></canvas></div>
+                    </div>
+                </div>
+
+                <div id="alumni" class="tab-content">
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mb-8">
+                        <div class="p-6 bg-slate-50 border-b border-slate-100 flex flex-wrap justify-between items-center gap-4">
+                            <h4 class="font-bold text-slate-800 uppercase text-sm">Alumni Records</h4>
+                            <button onclick="openAlumniModal()" class="bg-tpo-orange text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md hover:opacity-90 transition">
+                                <i class="fas fa-plus mr-1"></i> Add Alumnus
+                            </button>
+                        </div>
+                        <div class="table-responsive overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    <tr>
+                                        <th class="px-8 py-4">Image</th>
+                                        <th class="px-8 py-4">Name</th>
+                                        <th class="px-8 py-4">Batch</th>
+                                        <th class="px-8 py-4">Company</th>
+                                        <th class="px-8 py-4">Role</th>
+                                        <th class="px-8 py-4">LinkedIn</th>
+                                        <th class="px-8 py-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm divide-y divide-slate-100">
+                                    {% for alum in alumni %}
+                                    <tr class="hover:bg-slate-50 transition-all">
+                                        <td class="px-8 py-4">
+                                            {% if alum.image %}
+                                            <img src="{{ alum.image.url }}" alt="{{ alum.name }}" class="h-10 w-10 rounded-full object-cover border border-slate-200">
+                                            {% else %}
+                                            <div class="h-10 w-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                                                {% if alum.initials %}{{ alum.initials }}{% else %}AL{% endif %}
+                                            </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-8 py-4 font-bold text-slate-700">{{ alum.name }}</td>
+                                        <td class="px-8 py-4">{{ alum.batch }}</td>
+                                        <td class="px-8 py-4">{{ alum.company }}</td>
+                                        <td class="px-8 py-4">{{ alum.role }}</td>
+                                        <td class="px-8 py-4">
+                                            {% if alum.linkedin %}
+                                            <a href="{{ alum.linkedin }}" target="_blank" class="text-blue-500 hover:text-blue-700 font-bold"><i class="fab fa-linkedin text-lg"></i></a>
+                                            {% else %}
+                                            <span class="text-slate-400">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-8 py-4 text-right space-x-2">
+                                            <button onclick="openAlumniModal({{ alum.id }}, '{{ alum.name|escapejs }}', '{{ alum.company|escapejs }}', '{{ alum.role|escapejs }}', '{{ alum.batch|escapejs }}', '{{ alum.linkedin|escapejs }}', '{{ alum.testimonial|escapejs }}')" class="bg-blue-50 text-tpo-blue px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-tpo-blue hover:text-white transition-all">
+                                                <i class="fas fa-edit mr-1"></i> Edit
+                                            </button>
+                                            <button onclick="deleteAlumni({{ alum.id }})" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-red-600 hover:text-white transition-all">
+                                                <i class="fas fa-trash-alt mr-1"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr><td colspan="7" class="px-8 py-4 text-center text-slate-400">No alumni records found.</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="companies" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                        <!-- Left Panel: Companies list -->
+                        <div class="lg:col-span-1 bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col h-[600px]">
+                            <h4 class="font-bold text-slate-800 uppercase text-xs tracking-wider mb-4">Partner Companies</h4>
+                            <div class="overflow-y-auto space-y-2 flex-1 pr-2 scrollbar-thin">
+                                {% for name in company_names %}
+                                <button onclick="selectCompany('{{ name|escapejs }}', this)" class="company-btn w-full text-left p-4 rounded-2xl hover:bg-slate-50 transition-all font-bold text-sm text-slate-600 flex items-center justify-between border border-transparent">
+                                    <span>{{ name }}</span>
+                                    <i class="fas fa-chevron-right text-xs text-slate-400"></i>
+                                </button>
+                                {% empty %}
+                                <p class="text-slate-400 text-xs text-center py-8">No companies found.</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Right Panel: Student Pipeline Table -->
+                        <div class="lg:col-span-3 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-[600px]">
+                            <div class="p-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                                <h4 class="font-bold text-slate-800 uppercase text-sm" id="pipelineTitle">Select a company to view pipeline</h4>
+                            </div>
+                            <div class="overflow-y-auto flex-1 table-responsive">
+                                <table class="w-full text-left" id="pipelineTable">
+                                    <thead class="bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-widest sticky top-0 border-b">
+                                        <tr>
+                                            <th class="px-8 py-4">Student Name</th>
+                                            <th class="px-8 py-4">Job Title</th>
+                                            <th class="px-8 py-4">ATS Score</th>
+                                            <th class="px-8 py-4">Current Round</th>
+                                            <th class="px-8 py-4">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-sm divide-y divide-slate-100" id="pipelineBody">
+                                        <tr>
+                                            <td colspan="5" class="px-8 py-8 text-center text-slate-400 font-bold">Please select a company from the left panel.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div id="statusModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-95">
+            <div class="p-6 bg-tpo-blue text-white flex justify-between items-center">
+                <h3 class="font-bold uppercase tracking-tight">Update Student Round</h3>
+                <button onclick="closeModal()" class="text-white/50 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-8">
+                <div class="mb-6">
+                    <p class="text-xs text-slate-400 font-bold uppercase mb-1">Student Name</p>
+                    <p id="modalStudentName" class="text-lg font-black text-slate-800">---</p>
+                </div>
+                
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Move to Next Stage</label>
+                <select id="roundSelect" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-tpo-orange transition-all font-bold text-slate-700 mb-6">
+                    <option value="Aptitude">Aptitude Round</option>
+                    <option value="Technical">Technical Interview</option>
+                    <option value="HR">HR Interview</option>
+                    <option value="Selected">🎉 Final Selection</option>
+                    <option value="Rejected">❌ Rejected</option>
+                </select>
+
+                <button onclick="saveStatus()" class="w-full py-4 bg-tpo-orange text-white rounded-2xl font-black shadow-lg shadow-orange-200 hover:scale-[1.02] active:scale-95 transition-all">
+                    UPDATE STATUS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Alumni Modal -->
+    <div id="alumniModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all scale-95">
+            <div class="p-6 bg-tpo-blue text-white flex justify-between items-center">
+                <h3 id="alumniModalTitle" class="font-bold uppercase tracking-tight">Add Alumnus</h3>
+                <button onclick="closeAlumniModal()" class="text-white/50 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="alumniForm" method="POST" enctype="multipart/form-data" class="p-8 space-y-4">
+                {% csrf_token %}
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Name</label>
+                        <input type="text" name="name" id="alum_name" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-tpo-orange font-bold text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Company</label>
+                        <input type="text" name="company" id="alum_company" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-tpo-orange font-bold text-slate-700">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Role</label>
+                        <input type="text" name="role" id="alum_role" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-tpo-orange font-bold text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Batch / Year</label>
+                        <input type="text" name="batch" id="alum_batch" placeholder="e.g. 2024" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-tpo-orange font-bold text-slate-700">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">LinkedIn URL</label>
+                    <input type="url" name="linkedin" id="alum_linkedin" class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-tpo-orange font-bold text-slate-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Testimonial</label>
+                    <textarea name="testimonial" id="alum_testimonial" rows="3" class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-tpo-orange font-bold text-slate-700"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Profile Photo</label>
+                    <input type="file" name="image" id="alum_image" accept="image/*" class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-tpo-orange font-bold text-slate-700">
+                </div>
+                <button type="submit" class="w-full py-4 bg-tpo-orange text-white rounded-2xl font-black shadow-lg shadow-orange-200 hover:scale-[1.02] active:scale-95 transition-all">
+                    SAVE RECORD
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // TAB LOGIC
+        function openTab(evt, tabName) {
+            document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+            document.querySelectorAll(".tab-link").forEach(link => {
+                link.classList.remove("bg-tpo-orange", "text-white", "shadow-lg");
+                link.classList.add("text-blue-100", "hover:bg-blue-800");
+            });
+            document.getElementById(tabName).classList.add("active");
+            document.getElementById("tab-title").innerText = tabName.replace('-', ' ');
+            evt.currentTarget.classList.add("bg-tpo-orange", "text-white", "shadow-lg");
+            evt.currentTarget.classList.remove("text-blue-100", "hover:bg-blue-800");
+        }
+
+        // STUDENT SEARCH LOGIC
+        function filterStudents() {
+            let input = document.getElementById("studentInput").value.toUpperCase();
+            let tr = document.getElementById("studentMasterTable").getElementsByTagName("tr");
+            for (let i = 1; i < tr.length; i++) {
+                let nameTd = tr[i].getElementsByTagName("td")[0];
+                let deptTd = tr[i].getElementsByTagName("td")[1];
+                if (nameTd || deptTd) {
+                    let combinedText = (nameTd.innerText + deptTd.innerText).toUpperCase();
+                    tr[i].style.display = combinedText.indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        // CHARTS INITIALIZATION
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (tabParam) {
+                const btn = document.querySelector(`button[onclick*='${tabParam}']`);
+                if (btn) {
+                    btn.click();
+                }
+            }
+
+            new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: { labels: {{ dept_labels|safe }}, datasets: [{ label: 'Placed', data: {{ dept_placed_data|safe }}, backgroundColor: '#1e3a8a', borderRadius: 10 }] }
+            });
+            new Chart(document.getElementById('pieChart'), {
+                type: 'doughnut',
+                data: { labels: ['Placed', 'Unplaced'], datasets: [{ data: [{{ placed_students }}, {{ unplaced_students }}], backgroundColor: ['#10b981', '#ff8533'] }] },
+                options: { cutout: '80%' }
+            });
+            new Chart(document.getElementById('roundChart'), {
+                type: 'bar',
+                data: { labels: ['Shortlist', 'Interview', 'Hire', 'Reject'], datasets: [{ label: 'Students', data: {{ round_chart_data|safe }}, backgroundColor: ['#1e3a8a', '#ff8533', '#10b981', '#ef4444'], borderRadius: 15 }] },
+                options: { indexAxis: 'y' }
+            });
+        };
+
+        // MODAL LOGIC
+        let currentEditingStudent = "";
+
+        function openModal(name, currentRound) {
+            currentEditingStudent = name;
+            document.getElementById('modalStudentName').innerText = name;
+            document.getElementById('roundSelect').value = currentRound;
+            
+            const modal = document.getElementById('statusModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.firstElementChild.classList.remove('scale-95'), 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('statusModal');
+            modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function saveStatus() {
+            const newRound = document.getElementById('roundSelect').value;
+            
+            fetch('/api/update-round/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    student_name: currentEditingStudent,
+                    round: newRound
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Status updated for ${currentEditingStudent} to ${newRound}`);
+                    location.reload();
+                } else {
+                    alert("Error updating status: " + data.error);
+                }
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                alert("Failed to connect to server.");
+            });
+            
+            closeModal();
+        }
+
+        // ALUMNI MODAL LOGIC
+        function openAlumniModal(id = null, name = '', company = '', role = '', batch = '', linkedin = '', testimonial = '') {
+            const form = document.getElementById('alumniForm');
+            const title = document.getElementById('alumniModalTitle');
+            
+            if (id) {
+                title.innerText = 'Edit Alumnus';
+                form.action = `/admin-portal/alumni/edit/${id}/`;
+                document.getElementById('alum_name').value = name;
+                document.getElementById('alum_company').value = company;
+                document.getElementById('alum_role').value = role;
+                document.getElementById('alum_batch').value = batch;
+                document.getElementById('alum_linkedin').value = linkedin;
+                document.getElementById('alum_testimonial').value = testimonial;
+                document.getElementById('alum_image').required = false;
+            } else {
+                title.innerText = 'Add Alumnus';
+                form.action = '/admin-portal/alumni/add/';
+                form.reset();
+                document.getElementById('alum_image').required = false;
+            }
+            
+            const modal = document.getElementById('alumniModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.firstElementChild.classList.remove('scale-95'), 10);
+        }
+
+        function closeAlumniModal() {
+            const modal = document.getElementById('alumniModal');
+            modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function deleteAlumni(id) {
+            if (confirm("Are you sure you want to delete this alumni record?")) {
+                fetch(`/admin-portal/alumni/delete/${id}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Alumni record deleted successfully.");
+                        location.reload();
+                    } else {
+                        alert("Error: " + data.error);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    alert("Failed to delete alumni.");
+                });
+            }
+        }
+
+        // COMPANY PIPELINE SELECTION LOGIC
+        function selectCompany(companyName, btnElement) {
+            document.querySelectorAll('.company-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-50', 'text-tpo-blue', 'border-blue-200');
+                btn.classList.add('hover:bg-slate-50', 'text-slate-600');
+            });
+            btnElement.classList.add('bg-blue-50', 'text-tpo-blue', 'border-blue-200');
+            btnElement.classList.remove('hover:bg-slate-50', 'text-slate-600');
+
+            document.getElementById('pipelineTitle').innerText = `${companyName} Candidate Pipeline`;
+            const body = document.getElementById('pipelineBody');
+            body.innerHTML = `<tr><td colspan="5" class="px-8 py-8 text-center text-slate-500 font-bold"><i class="fas fa-spinner fa-spin mr-2"></i>Loading candidate pipeline...</td></tr>`;
+
+            fetch(`/api/admin/company-pipeline/?company=${encodeURIComponent(companyName)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.applications.length === 0) {
+                        body.innerHTML = `<tr><td colspan="5" class="px-8 py-8 text-center text-slate-400">No student applications found for this company.</td></tr>`;
+                        return;
+                    }
+                    body.innerHTML = '';
+                    data.applications.forEach(app => {
+                        let statusClass = "bg-orange-100 text-tpo-orange";
+                        if (app.status === 'Hired') statusClass = "bg-green-100 text-green-700";
+                        else if (app.status === 'Rejected') statusClass = "bg-red-100 text-red-700";
+                        else if (app.status === 'Shortlisted' || app.status === 'Interviewed') statusClass = "bg-blue-100 text-blue-700";
+
+                        body.innerHTML += `
+                            <tr class="hover:bg-slate-50 transition-all">
+                                <td class="px-8 py-4 font-bold text-slate-700">${app.student_name}</td>
+                                <td class="px-8 py-4">${app.job_title}</td>
+                                <td class="px-8 py-4 font-black text-indigo-600">${app.score}/100</td>
+                                <td class="px-8 py-4 font-bold text-slate-500">${app.current_round}</td>
+                                <td class="px-8 py-4">
+                                    <span class="px-3 py-1 ${statusClass} rounded-full text-[10px] font-black uppercase tracking-tighter">
+                                        ${app.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    body.innerHTML = `<tr><td colspan="5" class="px-8 py-8 text-center text-red-600 font-bold">Error loading pipeline: ${data.error}</td></tr>`;
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching pipeline:", err);
+                body.innerHTML = `<tr><td colspan="5" class="px-8 py-8 text-center text-red-600 font-bold">Failed to load data.</td></tr>`;
+            });
+        }
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+/* --- GLOBAL RESET --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+:root {
+    --primary-blue: #2b57f0;
+    --bg-gray: #f4f7fe;
+    --white: #ffffff;
+    --text-dark: #333;
+    --light-gray: #f4f4f4;
+}
+
+body {
+    background-color: var(--bg-gray);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- NAVBAR (STRICT CONSISTENCY) --- */
+.navbar {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    width: auto; /* Changed from 100px to auto to prevent squishing the text */
+    margin-left: 45px;
+}
+
+.logo span {
+    font-size: 38px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: white;
+}
+
+.logo img {
+    height: 80px; /* Large logo height as requested */
+}
+
+.nav-links ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin-right: 45px;
+    font-size: 20px;
+}
+
+.nav-links ul li a {
+    text-decoration: none;
+    color: white; 
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.nav-links ul li a:hover {
+    opacity: 0.8;
+}
+
+.nav-links li.active a {
+    border-bottom: 2px solid white;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+/* --- HEADER SECTION --- */
+.alumni-header {
+    padding: 40px 60px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #dfe3e8;
+}
+
+.header-text h1 {
+    color: var(--text-dark);
+    font-size: 28px;
+}
+
+.header-text p {
+    color: #666;
+    margin-top: 5px;
+}
+
+.search-box input {
+    padding: 12px 20px;
+    width: 350px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    outline: none;
+    font-size: 16px;
+}
+
+/* --- GRID LAYOUT --- */
+.alumni-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 40px 60px;
+}
+
+/* --- ALUMNI CARD --- */
+.alumni-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.alumni-card:hover {
+    transform: translateY(-5px);
+}
+
+.avatar-circle {
+    width: 70px;
+    height: 70px;
+    background: var(--primary-blue);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+}
+
+.alumni-card h3 {
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.company-tag { 
+    color: var(--primary-blue); 
+    font-weight: bold; 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+    display: block; 
+}
+
+.info-row {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0;
+}
+
+.contact-btn {
+    margin-top: 20px;
+    background: #25d366; /* WhatsApp Green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    transition: 0.3s;
+}
+
+.contact-btn:hover {
+    opacity: 0.9;
+}

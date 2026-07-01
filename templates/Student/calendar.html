@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Calendar | HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/calendar.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+        
+        <div class="nav-links">
+            <ul>
+                <li><a href="{% url 'student_profile' %}">Profile</a></li>
+                <li><a href="{% url 'student_jobs' %}">Jobs</a></li>
+                <li><a href="{% url 'student_interviews' %}">Interview</a></li>
+                <li><a href="{% url 'student_calendar' %}">Calendar</a></li>
+                <li><a href="{% url 'student_alumni' %}">Alumni</a></li>
+                <li><a href="{% url 'student_ats' %}">ATS Resume</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="calendar-layout">
+        <main class="calendar-main">
+            <div class="calendar-header">
+                <h2 id="monthDisplay">February 2026</h2>
+                <div class="cal-nav-btns">
+                    <button class="nav-btn">&lt;</button>
+                    <button class="nav-btn">&gt;</button>
+                </div>
+            </div>
+
+            <div class="calendar-grid">
+                <div class="day-label">Sun</div>
+                <div class="day-label">Mon</div>
+                <div class="day-label">Tue</div>
+                <div class="day-label">Wed</div>
+                <div class="day-label">Thu</div>
+                <div class="day-label">Fri</div>
+                <div class="day-label">Sat</div>
+                
+                <div id="calendarDays" class="days-container"></div>
+            </div>
+        </main>
+
+        <aside class="event-sidebar">
+            <h3>Upcoming Events</h3>
+            <div class="event-list" id="eventList">
+                </div>
+        </aside>
+    </div>
+
+    <!-- Inject events from view and run original JS -->
+    <script>
+        window.backendEvents = {{ events_json|safe }};
+        
+        // Show company name and round on event click
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('calendarDays').addEventListener('click', (e) => {
+                const dateCell = e.target.closest('.date-cell');
+                if (dateCell && dateCell.getAttribute('data-date')) {
+                    const dateStr = dateCell.getAttribute('data-date');
+                    const event = window.backendEvents.find(ev => ev.date === dateStr);
+                    if (event) {
+                        alert(`Company: ${event.company}\nRound: ${event.type}\nTime: ${event.time}`);
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="{% static 'Student/js/calendar.js' %}"></script>
+</body>
+</html>

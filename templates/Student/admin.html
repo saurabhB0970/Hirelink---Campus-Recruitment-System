@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Admin/TPO - HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/admin.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'institute' %}">Institute</a></li>
+                <li><a href="{% url 'recruiter_landing' %}">Recruiter</a></li>
+                <li><a href="{% url 'admin_landing' %}">Admin</a></li>
+                <li><a href="{% url 'student_landing' %}">Student</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.user_type == 'student' %}
+                        <li><a href="{% url 'student_profile' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'recruiter' %}
+                        <li><a href="{% url 'recruiter_dashboard' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'institute' %}
+                        <li><a href="{% url 'admin_portal' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}" class="signup-btn">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="signup-btn">Sign up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <!-- ================= ADMIN SECTION ================= -->
+
+    <!-- 🔹 TOP INTRO SECTION -->
+    <section class="admin-intro">
+        <div class="admin-intro-content">
+            <h2>For College Training & Placement Officers</h2>
+            <p>
+                HireLink provides a centralized platform for managing students,
+                coordinating recruiters, and tracking placement activities efficiently.
+            </p>
+        </div>
+    </section>
+
+    <!-- 🔹 FEATURE CARDS SECTION -->
+    <section class="admin-features-section">
+        <div class="admin-container">
+            <div class="admin-features">
+                <div class="admin-card">
+                    <h3>Student Verification</h3>
+                    <p>Approve and manage verified student profiles with ease.</p>
+                </div>
+
+                <div class="admin-card">
+                    <h3>Recruiter Approval</h3>
+                    <p>Review and authorize recruiter registrations securely.</p>
+                </div>
+
+                <div class="admin-card">
+                    <h3>Placement Tracking</h3>
+                    <p>Monitor placement statistics and generate reports instantly.</p>
+                </div>
+
+                <div class="admin-card">
+                    <h3>Drive Management</h3>
+                    <p>Organize and schedule campus recruitment drives smoothly.</p>
+                </div>
+            </div>
+
+            <a href="{% url 'register' %}?type=institute" class="btn">Sign up</a>
+        </div>
+    </section>
+</body>
+</html>

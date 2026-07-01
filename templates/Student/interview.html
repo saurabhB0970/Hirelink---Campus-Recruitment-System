@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interviews | HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/interview.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+        
+        <div class="nav-links">
+            <ul>
+                <li><a href="{% url 'student_profile' %}">Profile</a></li>
+                <li><a href="{% url 'student_jobs' %}">Jobs</a></li>
+                <li><a href="{% url 'student_interviews' %}">Interview</a></li>
+                <li><a href="{% url 'student_calendar' %}">Calendar</a></li>
+                <li><a href="{% url 'student_alumni' %}">Alumni</a></li>
+                <li><a href="{% url 'student_ats' %}">ATS Resume</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <aside class="interview-list-container">
+            <h3>Upcoming Interviews</h3>
+            <div id="interviewList" class="interview-list">
+                <!-- Cards will be populated here -->
+            </div>
+        </aside>
+
+        <main class="interview-detail-view">
+            <div id="placeholder" class="detail-placeholder">
+                <h3>Select an interview to view status roadmap & preparation notes.</h3>
+            </div>
+
+            <div id="contentArea" style="display:none;">
+                <div class="header-section">
+                    <h2 id="compName">Company Name</h2>
+                    <p id="roleName" class="role">Role Description</p>
+                    <span id="statusTag" class="status-badge">Confirmed</span>
+                </div>
+
+                <div class="meeting-details-card">
+                    <h3>Meeting Details</h3>
+                    <p>🔁 <strong>Round:</strong> <span id="meetRound">--</span></p>
+                    <p>📅 <strong>Date:</strong> <span id="meetDate">--</span></p>
+                    <p>⏰ <strong>Time:</strong> <span id="meetTime">--</span></p>
+                    <p>👤 <strong>Interviewer:</strong> <span id="interviewer">--</span></p>
+                    <p>🔗 <strong>Link / Venue:</strong> <span id="meetLink">--</span></p>
+                </div>
+
+                <div class="round-roadmap-section">
+                    <h3>Interview Round Progress</h3>
+                    <div id="roadmapSteps" class="roadmap-steps">
+                        <!-- Steps will be generated here -->
+                    </div>
+                </div>
+
+                <div class="prep-checklist-section">
+                    <h3>Preparation Checklist</h3>
+                    <ul id="prepList" class="prep-list">
+                        <!-- Checklist will be generated here -->
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        window.backendInterviews = {{ interviews_json|safe }};
+    </script>
+    <script src="{% static 'Student/js/interview.js' %}"></script>
+</body>
+</html>

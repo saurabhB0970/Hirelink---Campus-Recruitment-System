@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alumni Directory | HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/alumni.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+        
+        <div class="nav-links">
+            <ul>
+                <li><a href="{% url 'student_profile' %}">Profile</a></li>
+                <li><a href="{% url 'student_jobs' %}">Jobs</a></li>
+                <li><a href="{% url 'student_interviews' %}">Interview</a></li>
+                <li><a href="{% url 'student_calendar' %}">Calendar</a></li>
+                <li><a href="{% url 'student_alumni' %}">Alumni</a></li>
+                <li><a href="{% url 'student_ats' %}">ATS Resume</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <header class="directory-header">
+            <h2>🎓 Alumni Directory</h2>
+            <div class="search-bar-wrapper">
+                <input type="text" id="alumniSearch" placeholder="Search by name or company..." onkeyup="filterAlumni()">
+            </div>
+        </header>
+
+        <section class="alumni-grid" id="alumniGrid">
+            <!-- Cards will be populated here -->
+        </section>
+    </div>
+
+    <script>
+        window.backendAlumni = {{ alumni_json|safe }};
+    </script>
+    <script src="{% static 'Student/js/alumni.js' %}"></script>
+</body>
+</html>

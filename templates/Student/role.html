@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Role Selection - HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/role.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'institute' %}">Institute</a></li>
+                <li><a href="{% url 'recruiter_landing' %}">Recruiter</a></li>
+                <li><a href="{% url 'admin_landing' %}">Admin</a></li>
+                <li><a href="{% url 'student_landing' %}">Student</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.user_type == 'student' %}
+                        <li><a href="{% url 'student_profile' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'recruiter' %}
+                        <li><a href="{% url 'recruiter_dashboard' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'institute' %}
+                        <li><a href="{% url 'admin_portal' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}" class="signup-btn">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="signup-btn">Sign up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <section class="roles-section">
+
+        <!-- Recruiter -->
+        <div class="role-card">
+            <div class="role-label">RECRUITER</div>
+
+            <div class="role-content">
+                <h2>Smart & Streamlined Hiring</h2>
+                <p>
+                    Post openings, review applications, and track
+                    candidate progress with real-time analytics —
+                    all in one dashboard.
+                </p>
+                <button class="btn" onclick="location.href='{% url 'register' %}?type=recruiter'">For Recruiters</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Admin -->
+        <div class="role-card">
+            <div class="role-label">ADMIN</div>
+
+            <div class="role-content">
+                <h2>Digitized Placement Management</h2>
+                <p>
+                    Manage student data, schedule drives, and view
+                    placement statistics effortlessly through a
+                    unified interface.
+                </p>
+                <button class="btn" onclick="location.href='{% url 'register' %}?type=institute'">For Admin</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Student -->
+        <div class="role-card">
+            <div class="role-label">STUDENT</div>
+
+            <div class="role-content">
+                <h2>Learn, Build & Get Hired</h2>
+                <p>
+                    Create an ATS-friendly resume, track upcoming
+                    drives, and connect with alumni to grow your
+                    career.
+                </p>
+                <button class="btn" onclick="location.href='{% url 'register' %}?type=student'">For Student</button>
+            </div>
+        </div>
+
+    </section>
+
+</body>
+</html>

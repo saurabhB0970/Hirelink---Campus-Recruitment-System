@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Applicants | HireLink Recruiter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="stylesheet" href="{% static 'Recruiter/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'Recruiter/css/global.css' %}">
+  
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="Logo">
+            <h1>HireLink</h1>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{% url 'recruiter_dashboard' %}">Dashboard</a>
+            <a href="{% url 'recruiter_jobs' %}">Jobs</a>
+            <a href="{% url 'recruiter_applicants' %}">Applicants</a> 
+            <a href="{% url 'recruiter_interviews' %}">Interviews</a>
+            <a href="{% url 'recruiter_analytics' %}">Analytics</a>
+            <a href="{% url 'recruiter_company_profile' %}">Profile</a>
+            <a href="{% url 'recruiter_settings' %}" class="nav-settings">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+    </nav>
+
+  <main class="container">
+    <h2>👩‍🎓 Applicants Management</h2>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+      <h3>Filter Applicants</h3>
+      <div class="filter-grid">
+        <input type="text" id="filterName" placeholder="Search by name">
+        <input type="text" id="filterSkill" placeholder="Filter by skill (e.g., Java)">
+        <select id="filterStatus">
+          <option value="">All Status</option>
+          <option value="Under Review">Under Review</option>
+          <option value="Shortlisted">Shortlisted</option>
+          <option value="Interviewed">Interviewed</option>
+          <option value="Hired">Hired</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+        <button id="applyFilter" class="btn-primary">Apply</button>
+      </div>
+    </section>
+
+    <!-- All Applicants Section -->
+    <section>
+      <h3>All Applicants</h3>
+      <div id="applicantCards" class="applicant-grid"></div>
+    </section>
+
+    <!-- Shortlisted Section -->
+    <section>
+      <h3>Shortlisted Applicants</h3>
+      <div id="shortlistedCards" class="applicant-grid"></div>
+    </section>
+  </main>
+
+  <script>
+      window.backendApplicants = {{ applicants_json|safe }};
+      
+      // Helper to get CSRF cookie
+      function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+  </script>
+  <script src="{% static 'Recruiter/js/applicants.js' %}"></script>
+
+</body>
+</html>

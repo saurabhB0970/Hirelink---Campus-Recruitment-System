@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs | HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/jobs.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+        
+        <div class="nav-links">
+            <ul>
+                <li><a href="{% url 'student_profile' %}">Profile</a></li>
+                <li><a href="{% url 'student_jobs' %}">Jobs</a></li>
+                <li><a href="{% url 'student_interviews' %}">Interview</a></li>
+                <li><a href="{% url 'student_calendar' %}">Calendar</a></li>
+                <li><a href="{% url 'student_alumni' %}">Alumni</a></li>
+                <li><a href="{% url 'student_ats' %}">ATS Resume</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="main-container">
+        <aside class="job-list-container">
+            <div class="list-tabs">
+                <button class="list-tab active" onclick="switchList('all')">All Jobs</button>
+                <button class="list-tab" onclick="switchList('applied')">Applied Jobs</button>
+            </div>
+            <div id="jobCardsContainer" class="cards-scroll-area">
+            </div>
+        </aside>
+
+        <main class="job-detail-view" id="jobDetailView">
+            <div id="detailHeader" class="detail-header">
+                <div class="company-brand">
+                    <div class="company-logo-placeholder"></div>
+                    <div class="title-meta">
+                        <h2 id="viewTitle">Select a job to view details</h2>
+                        <p id="viewMeta"></p>
+                    </div>
+                </div>
+                <div class="action-banner" id="statusBanner">
+                    Select a job from the left to get started.
+                </div>
+            </div>
+
+            <div class="detail-tabs">
+                <button class="det-tab active" onclick="switchDetailTab(event, 'description')">Job Description</button>
+                <button class="det-tab" onclick="switchDetailTab(event, 'workflow')">Hiring Workflow</button>
+                <button class="det-tab" onclick="switchDetailTab(event, 'criteria')">Eligibility Criteria</button>
+            </div>
+
+            <div class="detail-content">
+                <div id="description" class="tab-pane active">
+                    <h3 class="section-title">Job Summary</h3>
+                    <div id="jobSummaryText"></div>
+                    <h3 class="section-title">Description</h3>
+                    <div id="jobDescText"></div>
+                </div>
+
+                <div id="workflow" class="tab-pane">
+                    <h3 class="section-title">Selection Process</h3>
+                    <ul class="workflow-list" id="workflowList"></ul>
+                </div>
+
+                <div id="criteria" class="tab-pane">
+                    <h3 class="section-title">Requirements</h3>
+                    <ul class="criteria-list" id="criteriaList"></ul>
+                </div>
+            </div>
+            
+            <div class="apply-footer" id="applyFooter" style="display:none;">
+                <button class="apply-btn" onclick="applyToJob()">Apply Now</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- CSRF Helper and Dynamic Jobs Injection -->
+    <script>
+        window.backendJobs = {{ jobs_json|safe }};
+        window.studentProfile = {{ student_profile_json|safe }};
+        
+        // Helper to get CSRF cookie for fetch requests
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    <script src="{% static 'Student/js/jobs.js' %}"></script>
+</body>
+</html>

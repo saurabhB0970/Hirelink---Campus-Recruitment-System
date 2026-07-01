@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Students - HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/student.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'institute' %}">Institute</a></li>
+                <li><a href="{% url 'recruiter_landing' %}">Recruiter</a></li>
+                <li><a href="{% url 'admin_landing' %}">Admin</a></li>
+                <li><a href="{% url 'student_landing' %}">Student</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.user_type == 'student' %}
+                        <li><a href="{% url 'student_profile' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'recruiter' %}
+                        <li><a href="{% url 'recruiter_dashboard' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'institute' %}
+                        <li><a href="{% url 'admin_portal' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}" class="signup-btn">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="signup-btn">Sign up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ================= STUDENT SECTION ================= -->
+    <section class="student-intro">
+        <div class="student-intro-content">
+            <h2>For Students</h2>
+            <p>
+                Build your professional profile, explore job opportunities,
+                and track your placement journey — all in one smart platform.
+            </p>
+        </div>
+    </section>
+
+    <!-- 🔹 FEATURE CARDS SECTION -->
+    <section class="student-features-section">
+        <div class="student-container">
+            <div class="student-features">
+                <div class="student-card">
+                    <h3>Create Professional Profile</h3>
+                    <p>Showcase your skills, achievements, and academic details.</p>
+                </div>
+
+                <div class="student-card">
+                    <h3>Apply for Jobs</h3>
+                    <p>Explore company openings and apply directly through the portal.</p>
+                </div>
+
+                <div class="student-card">
+                    <h3>Application Tracking</h3>
+                    <p>Track your application status and placement progress easily.</p>
+                </div>
+
+                <div class="student-card">
+                    <h3>Placement Notifications</h3>
+                    <p>Receive instant updates about drives and job opportunities.</p>
+                </div>
+            </div>
+
+            <a href="{% url 'register' %}?type=student" class="btn">Sign Up</a>
+        </div>
+    </section>
+</body>
+</html>

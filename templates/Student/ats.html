@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Checker | HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/ats.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+    
+        <div class="nav-links">
+            <ul>
+                <li><a href="{% url 'student_profile' %}">Profile</a></li>
+                <li><a href="{% url 'student_jobs' %}">Jobs</a></li>
+                <li><a href="{% url 'student_interviews' %}">Interview</a></li>
+                <li><a href="{% url 'student_calendar' %}">Calendar</a></li>
+                <li><a href="{% url 'student_alumni' %}">Alumni</a></li>
+                <li><a href="{% url 'student_ats' %}">ATS Resume</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="ats-container">
+        <aside class="ats-info">
+            <h2>Why Check Your ATS Score?</h2>
+            <p>Most companies use AI to filter resumes. If your score is below 80%, a human might never see your application.</p>
+            <ul class="benefit-list">
+                <li>🎯 <strong>Keyword Matching:</strong> Align with job descriptions.</li>
+                <li>📏 <strong>Format Check:</strong> Ensure your PDF is readable by AI.</li>
+                <li>🚀 <strong>Better Rankings:</strong> Appear at the top of the recruiter's list.</li>
+            </ul>
+        </aside>
+
+        <main class="ats-main">
+            <div class="external-link-card">
+                <div class="icon-header">
+                    <img src="https://cdn-icons-png.flaticon.com/512/942/942799.png" width="100" alt="ATS Icon">
+                </div>
+                <h1>Analyze Your Resume Performance</h1>
+                <p>We have partnered with top industry tools to give you the most accurate ATS score in the market.</p>
+                
+                <div class="action-box">
+                    <p class="small-note">Click below to open the ATS Checker</p>
+                    <a href="https://www.jobscan.co/" target="_blank" class="scan-btn">
+                        Get Your ATS Score %
+                    </a>
+                </div>
+
+                <div class="steps">
+                    <div class="step"><span>1</span> Upload PDF</div>
+                    <div class="step"><span>2</span> Paste Job Link</div>
+                    <div class="step"><span>3</span> Get Score %</div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

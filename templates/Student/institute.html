@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institute - HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/institute.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'institute' %}">Institute</a></li>
+                <li><a href="{% url 'recruiter_landing' %}">Recruiter</a></li>
+                <li><a href="{% url 'admin_landing' %}">Admin</a></li>
+                <li><a href="{% url 'student_landing' %}">Student</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.user_type == 'student' %}
+                        <li><a href="{% url 'student_profile' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'recruiter' %}
+                        <li><a href="{% url 'recruiter_dashboard' %}">Dashboard</a></li>
+                    {% elif user.user_type == 'institute' %}
+                        <li><a href="{% url 'admin_portal' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}" class="signup-btn">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="signup-btn">Sign up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ================= INSTITUTE INTRO SECTION ================= -->
+    <section class="institute-intro">
+        <div class="institute-intro-content">
+            <img src="{% static 'Student/assets/college.png' %}" alt="College Image">
+            <h1>KJ College Of Engineering And Management Research</h1>
+            <p>Pune, Maharashtra</p>
+        </div>
+    </section>
+
+    <!-- ================= ABOUT SECTION ================= -->
+    <section class="institute-about">
+        <div class="institute-container">
+            <h2>About Our College</h2>
+            <p>
+                KJ College of Engineering and Management Research, Pune, is a reputed
+                engineering institute committed to academic excellence, innovation,
+                and industry-oriented learning. The institute offers undergraduate and
+                postgraduate programs in engineering and management.
+            </p>
+            <p>
+                With experienced faculty, modern infrastructure, and strong industry
+                collaborations, the college ensures students are well-prepared for
+                real-world challenges. The dedicated Training and Placement Cell
+                actively connects students with leading companies.
+            </p>
+        </div>
+    </section>
+
+    <!-- ================= PLACEMENT SECTION ================= -->
+    <section class="institute-placement">
+        <div class="institute-container">
+            <h2>Placement Statistics 2025</h2>
+            <div class="placement-cards">
+                <div class="placement-card">
+                    <h3>₹10 LPA</h3>
+                    <p>Highest Package</p>
+                </div>
+                <div class="placement-card">
+                    <h3>₹4.49 LPA</h3>
+                    <p>Average Package</p>
+                </div>
+                <div class="placement-card">
+                    <h3>85%</h3>
+                    <p>Placement Rate</p>
+                </div>
+            </div>
+            <p class="recruiters">
+                <strong>Top Recruiters:</strong> IBM, Sutherland, Infosys, TCS, Chegg, Zensar, Amazon etc.
+            </p>
+        </div>
+    </section>
+</body>
+</html>

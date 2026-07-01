@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireLink | Recruiter Dashboard</title>
+    <link rel="stylesheet" href="{% static 'Recruiter/css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'Recruiter/css/dashboard.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="HireLink logo" class="w-10 h-10 md:w-12 md:h-12 rounded object-contain">
+            <h1>HireLink</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'recruiter_dashboard' %}">Dashboard</a>
+            <a href="{% url 'recruiter_jobs' %}">Jobs</a>
+            <a href="{% url 'recruiter_applicants' %}">Applicants</a>
+            <a href="{% url 'recruiter_interviews' %}">Interviews</a>
+            <a href="{% url 'recruiter_analytics' %}">Analytics</a>
+            <a href="{% url 'recruiter_company_profile' %}">Profile</a>
+            <a href="{% url 'recruiter_settings' %}" class="nav-settings">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+    </nav>
+    <main class="container">
+        <header class="dashboard-header">
+            <div>
+                <h2>Recruiter Dashboard</h2>
+                <p>Welcome back, {{ profile.user.full_name }}! Here's a summary of your hiring progress.</p>
+            </div>
+            <a href="{% url 'recruiter_jobs' %}" style="text-decoration: none;">
+                <button class="btn-post">+ Post New Job</button>
+            </a>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card blue">
+                <div class="icon-box"><i class="fas fa-briefcase"></i></div>
+                <div class="stat-info"><h3>{{ jobs_count }}</h3><p>Jobs Posted</p></div>
+            </div>
+            <div class="stat-card orange">
+                <div class="icon-box"><i class="fas fa-users"></i></div>
+                <div class="stat-info"><h3>{{ applicants_count }}</h3><p>Applicants</p></div>
+            </div>
+            <div class="stat-card green">
+                <div class="icon-box"><i class="fas fa-user-check"></i></div>
+                <div class="stat-info"><h3>{{ shortlisted_count }}</h3><p>Shortlisted</p></div>
+            </div>
+            <div class="stat-card purple">
+                <div class="icon-box"><i class="fas fa-calendar-day"></i></div>
+                <div class="stat-info"><h3>{{ interviews_count }}</h3><p>Interviews</p></div>
+            </div>
+        </section>
+
+        <section class="chart-section">
+            <div class="chart-header">
+                <h3>Applicants per Role</h3>
+                <span class="live-badge">Live Updates</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="applicantChart"></canvas>
+            </div>
+        </section>
+    </main>
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <img src="{% static 'Recruiter/assets/logo.jpeg' %}" alt="HireLink Logo">
+                <p>Empowering campus recruitment with smart automation and AI-driven insights.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="{% url 'recruiter_dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'recruiter_jobs' %}">Manage Jobs</a></li>
+                    <li><a href="{% url 'recruiter_analytics' %}">Hiring Analytics</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Connect</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+                <p>support@hirelink.com</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 HireLink Recruiter Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.backendChartRoles = {{ roles_applicants_json|safe }};
+    </script>
+    <script src="{% static 'Recruiter/js/chart.js' %}"></script>
+</body>
+</html>

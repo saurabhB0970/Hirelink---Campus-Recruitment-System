@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - HireLink</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'Registration.css' %}">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'logo.jpeg' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'institute' %}">Institute</a></li>
+                <li><a href="{% url 'recruiter_landing' %}">Recruiter</a></li>
+                <li><a href="{% url 'admin_landing' %}">Admin</a></li>
+                <li><a href="{% url 'student_landing' %}">Student</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}" class="signup-btn">Sign up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Registration Section -->
+    <section class="register-container">
+        <div class="register-wrapper">
+            <!-- Left Side - Registration Form -->
+            <div class="register-form-section">
+                <div class="register-header">
+                    <h2>Create Your Account</h2>
+                    <p>Join HireLink and start your journey</p>
+                </div>
+
+                {% if messages %}
+                <div class="error-message" style="display: block; margin-bottom: 15px; padding: 10px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px;">
+                    {% for message in messages %}
+                        <span>{{ message }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- User Type Selection -->
+                <div class="user-type-selector">
+                    <button class="type-btn active" data-type="student">Student</button>
+                    <button class="type-btn" data-type="recruiter">Recruiter</button>
+                    <button class="type-btn" data-type="institute">Institute Admin</button>
+                </div>
+
+                <!-- Registration Form -->
+                <form id="registerForm" class="register-form" method="POST" action="{% url 'register' %}">
+                    {% csrf_token %}
+                    <!-- Hidden field to pass user_type -->
+                    <input type="hidden" name="user_type" id="userTypeInput" value="student">
+
+                    <!-- Common Fields -->
+                    <div class="form-group">
+                        <label for="fullname">Full Name</label>
+                        <input 
+                            type="text" 
+                            id="fullname" 
+                            name="fullname" 
+                            placeholder="Enter your full name" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter your email" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone" 
+                            placeholder="Enter your phone number" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Student Specific Fields -->
+                    <div class="field-group student-fields active-fields">
+                        <div class="form-group">
+                            <label for="roll_number">Roll Number</label>
+                            <input 
+                                type="text" 
+                                id="roll_number" 
+                                name="roll_number" 
+                                placeholder="Enter your roll number"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="college">College/University</label>
+                            <input 
+                                type="text" 
+                                id="college" 
+                                name="college" 
+                                placeholder="Enter your college name"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="major">Major/Branch</label>
+                            <input 
+                                type="text" 
+                                id="major" 
+                                name="major" 
+                                placeholder="Enter your major"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Recruiter Specific Fields -->
+                    <div class="field-group recruiter-fields">
+                        <div class="form-group">
+                            <label for="company">Company Name</label>
+                            <input 
+                                type="text" 
+                                id="company" 
+                                name="company" 
+                                placeholder="Enter company name"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="position">Position/Title</label>
+                            <input 
+                                type="text" 
+                                id="position" 
+                                name="position" 
+                                placeholder="Enter your position"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company_email">Company Email</label>
+                            <input 
+                                type="email" 
+                                id="company_email" 
+                                name="company_email" 
+                                placeholder="Enter company email"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Institute Admin Specific Fields -->
+                    <div class="field-group institute-fields">
+                        <div class="form-group">
+                            <label for="institute_name">Institute Name</label>
+                            <input 
+                                type="text" 
+                                id="institute_name" 
+                                name="institute_name" 
+                                placeholder="Enter institute name"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="designation">Designation</label>
+                            <input 
+                                type="text" 
+                                id="designation" 
+                                name="designation" 
+                                placeholder="Enter your designation"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dept">Department</label>
+                            <input 
+                                type="text" 
+                                id="dept" 
+                                name="dept" 
+                                placeholder="Enter your department"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Common Password Fields -->
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Create a strong password" 
+                            required
+                        >
+                        <small class="password-hint">At least 8 characters with uppercase, lowercase, and numbers</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input 
+                            type="password" 
+                            id="confirm_password" 
+                            name="confirm_password" 
+                            placeholder="Confirm your password" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="form-group checkbox">
+                        <label>
+                            <input type="checkbox" name="terms" required>
+                            I agree to HireLink's <a href="#" target="_blank">Terms of Service</a> and 
+                            <a href="#" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn register-btn">Create Account</button>
+                </form>
+
+                <div class="register-footer">
+                    <p>Already have an account? <a href="{% url 'login' %}" class="login-link">Log in here</a></p>
+                </div>
+            </div>
+
+            <!-- Right Side - Info -->
+            <div class="register-info-section">
+                <div class="info-box">
+                    <h3>Why Join HireLink?</h3>
+                    <ul class="benefits-list">
+                        <li>
+                            <span class="icon">✓</span>
+                            <div>
+                                <h4>For Students</h4>
+                                <p>Access exclusive job opportunities and internships</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <div>
+                                <h4>For Recruiters</h4>
+                                <p>Connect with talented students and build your team</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <div>
+                                <h4>For Institutes</h4>
+                                <p>Manage placements and track student progress</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <div>
+                                <h4>Easy to Use</h4>
+                                <p>Simple and intuitive interface for all users</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <div>
+                                <h4>Secure & Reliable</h4>
+                                <p>Your data is protected with industry standards</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="hirelink-footer">
+        <p>&copy; 2025 HireLink. All rights reserved. | <strong>Connecting Talent with Opportunity</strong></p>
+    </footer>
+
+    <script src="{% static 'Registration.js' %}"></script>
+    <script>
+        // Update the user_type hidden field when user-type selector buttons are clicked
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('userTypeInput').value = btn.dataset.type;
+            });
+        });
+
+        // Autoselect user type based on query parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const typeParam = urlParams.get('type');
+            if (typeParam) {
+                const btn = document.querySelector(`.type-btn[data-type="${typeParam}"]`);
+                if (btn) {
+                    btn.click();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

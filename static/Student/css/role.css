@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #2563eb;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 85px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 100px;
+    margin-left: 45px;
+    
+}
+
+.logo span {
+    font-size: 38px;
+    font-weight: bold;
+    
+}
+
+h1 span {
+    font-weight: 700;
+    
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+}
+
+.signup-btn {
+    background-color: #ff7a18;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-right: 45px;
+}
+
+.roles-section {
+    width: 80%;
+    margin: 60px auto;
+}
+
+.role-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 80px;
+    padding: 40px 0;
+}
+
+.role-label {
+    min-width: 120px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: #000;
+    margin-left: 200px;
+    margin-top: 80px;
+
+}
+
+.role-content h2 {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    margin-left: 200px;
+    
+    
+
+}
+
+.role-content p {
+    font-size: 18px;
+    color: #7a7aa3;
+    line-height: 1.6;
+    max-width: 650px;
+    margin-bottom: 25px;
+    margin-left: 200px;
+    
+    
+}
+
+.btn {
+    background-color: #ff7a18;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 200px;
+    
+}
+
+.btn:hover {
+    background-color: #e96a0f;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #c8bcbc;
+}

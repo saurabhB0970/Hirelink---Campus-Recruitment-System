@@ -1,0 +1,391 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | HireLink</title>
+    <link rel="stylesheet" href="{% static 'Student/css/profile.css' %}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'Student/assets/Hire.png' %}" alt="HireLink Logo">
+            <span>HireLink</span>
+        </div>
+    
+        <div class="nav-links">
+            <ul>
+                <li><a href="{% url 'student_profile' %}">Profile</a></li>
+                <li><a href="{% url 'student_jobs' %}">Jobs</a></li>
+                <li><a href="{% url 'student_interviews' %}">Interview</a></li>
+                <li><a href="{% url 'student_calendar' %}">Calendar</a></li>
+                <li><a href="{% url 'student_alumni' %}">Alumni</a></li>
+                <li><a href="{% url 'student_ats' %}">ATS Resume</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-pic-container">
+                <form id="photoForm" method="POST" action="{% url 'update_profile_photo' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" id="imageInput" name="profile_pic" hidden accept="image/*" onchange="document.getElementById('photoForm').submit()">
+                </form>
+                <div class="profile-circle" onclick="document.getElementById('imageInput').click()">
+                    {% if profile.profile_pic %}
+                        <img id="profileDisplay" src="{{ profile.profile_pic.url }}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                        <span id="plusIcon" style="display:none;">+</span>
+                    {% else %}
+                        <img id="profileDisplay" src="" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                        <span id="plusIcon">+</span>
+                    {% endif %}
+                </div>
+            </div>
+            <h2 class="user-name">{{ profile.user.full_name }}</h2>
+            
+            <ul class="menu-list">
+                <li class="menu-item active" onclick="showSection(event, 'basic')">Basic Details</li>
+                <li class="menu-item" onclick="showSection(event, 'education')">Education Details</li>
+                <li class="menu-item" onclick="showSection(event, 'internship')">Internship</li>
+                <li class="menu-item" onclick="showSection(event, 'skills')">Skills & Languages</li>
+                <li class="menu-item" onclick="showSection(event, 'projects')">Projects</li>
+                <li class="menu-item" onclick="showSection(event, 'certifications')">Certifications</li>
+                <li class="menu-item" onclick="showSection(event, 'extra')">Extra Activities</li>
+                <li class="menu-item" onclick="showSection(event, 'resume')">Resume</li>
+            </ul>
+        </aside>
+
+        <main class="content-area">
+            {% if messages %}
+            <div style="margin-bottom: 20px;">
+                {% for message in messages %}
+                <div style="padding: 12px; border-radius: 6px; font-weight: bold; {% if message.tags == 'success' %}background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;{% else %}background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Basic Details -->
+            <div id="basic" class="content-section active">
+                <h1>Basic Details</h1>
+                <div class="info-card">
+                    <div id="basicDisplay">
+                        <div class="info-item"><strong>Name:</strong> <span>{{ profile.user.full_name }}</span></div>
+                        <div class="info-item"><strong>Location:</strong> <span>{{ profile.location }}</span></div>
+                        <div class="info-item"><strong>Email:</strong> <span>{{ profile.user.email }}</span></div>
+                        <div class="info-item"><strong>Phone:</strong> <span>{{ profile.user.phone_number }}</span></div>
+                        <button class="btn" style="margin-top: 15px;" onclick="toggleEdit('basic')">Edit Basic Details</button>
+                    </div>
+                    <div id="basicEdit" style="display: none;">
+                        <form method="POST" action="{% url 'update_profile_basic' %}">
+                            {% csrf_token %}
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Full Name</label>
+                                <input type="text" name="full_name" value="{{ profile.user.full_name }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Location</label>
+                                <input type="text" name="location" value="{{ profile.location }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Phone Number</label>
+                                <input type="text" name="phone_number" value="{{ profile.user.phone_number }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            </div>
+                            <button type="submit" class="btn" style="margin-top: 10px; margin-right: 10px;">Save</button>
+                            <button type="button" class="btn" style="margin-top: 10px; background-color: #6c757d;" onclick="toggleEdit('basic')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education Details -->
+            <div id="education" class="content-section">
+                <h1>Education Details</h1>
+                <div class="info-card">
+                    <div id="educationDisplay">
+                        <h3>{{ profile.major|default:"B.Tech in Computer Science" }}</h3>
+                        <p class="sub-text">{{ profile.college|default:"K J College of Engineering" }}</p>
+                        <p style="margin-bottom: 8px;"><strong>Roll Number:</strong> {{ profile.roll_number|default:"N/A" }}</p>
+                        <p style="margin-bottom: 8px;"><strong>CGPA:</strong> {{ profile.cgpa }}</p>
+                        <p style="margin-bottom: 8px;"><strong>10th Percentage:</strong> {{ profile.ssc_percentage }}%</p>
+                        <p style="margin-bottom: 8px;"><strong>12th Percentage:</strong> {{ profile.hsc_percentage }}%</p>
+                        <p style="margin-bottom: 8px;"><strong>Backlogs:</strong> {{ profile.backlogs }}</p>
+                        <button class="btn" style="margin-top: 15px;" onclick="toggleEdit('education')">Edit Education Details</button>
+                    </div>
+                    <div id="educationEdit" style="display: none;">
+                        <form method="POST" action="{% url 'update_profile_education' %}">
+                            {% csrf_token %}
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">College / University</label>
+                                <input type="text" name="college" value="{{ profile.college }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Major / Branch</label>
+                                <input type="text" name="major" value="{{ profile.major }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Roll Number</label>
+                                <input type="text" name="roll_number" value="{{ profile.roll_number }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">CGPA</label>
+                                <input type="number" step="0.01" name="cgpa" value="{{ profile.cgpa }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">10th Percentage (SSC)</label>
+                                <input type="number" step="0.01" name="ssc_percentage" value="{{ profile.ssc_percentage }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">12th Percentage (HSC)</label>
+                                <input type="number" step="0.01" name="hsc_percentage" value="{{ profile.hsc_percentage }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Number of Backlogs</label>
+                                <input type="number" name="backlogs" value="{{ profile.backlogs }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <button type="submit" class="btn" style="margin-top: 10px; margin-right: 10px;">Save</button>
+                            <button type="button" class="btn" style="margin-top: 10px; background-color: #6c757d;" onclick="toggleEdit('education')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Internship -->
+            <div id="internship" class="content-section">
+                <h1>Internship and Work Experience</h1>
+                <div class="info-card">
+                    <div id="internshipDisplay">
+                        {% for internship in internships %}
+                        <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; position: relative;">
+                            <div class="experience-header">
+                                <h3>{{ internship.role }} at {{ internship.company }}</h3>
+                            </div>
+                            <p class="sub-text">Duration: {{ internship.duration }}</p>
+                            <p>{{ internship.description }}</p>
+                            <form method="POST" action="{% url 'delete_profile_internship' internship.id %}" style="display: inline; position: absolute; right: 10px; top: 10px;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 14px; font-weight: bold;">✕ Delete</button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p>No internships added yet.</p>
+                        {% endfor %}
+                        <button class="btn" style="margin-top: 15px;" onclick="toggleEdit('internship')">+ Add Internship</button>
+                    </div>
+                    <div id="internshipEdit" style="display: none;">
+                        <form method="POST" action="{% url 'add_profile_internship' %}">
+                            {% csrf_token %}
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Company Name</label>
+                                <input type="text" name="company" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Role / Position</label>
+                                <input type="text" name="role" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Duration</label>
+                                <input type="text" name="duration" placeholder="e.g. 6 months" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Description</label>
+                                <textarea name="description" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+                            </div>
+                            <button type="submit" class="btn" style="margin-top: 10px; margin-right: 10px;">Add</button>
+                            <button type="button" class="btn" style="margin-top: 10px; background-color: #6c757d;" onclick="toggleEdit('internship')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div id="skills" class="content-section">
+                <h1>Skills & Languages</h1>
+                <div class="info-card">
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                        {% for skill in skills %}
+                        <div style="background-color: #e7f0ff; color: #2b57f0; padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;">
+                            <span>{{ skill.name }}</span>
+                            <form method="POST" action="{% url 'delete_profile_skill' skill.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #2b57f0; cursor: pointer; font-weight: bold; font-size: 14px;">✕</button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p>No skills added yet.</p>
+                        {% endfor %}
+                    </div>
+                    <form method="POST" action="{% url 'add_profile_skill' %}" style="display: flex; gap: 10px; max-width: 400px;">
+                        {% csrf_token %}
+                        <input type="text" name="skill_name" placeholder="Add a skill..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                        <button type="submit" class="btn" style="margin-top: 0; padding: 8px 16px; border-radius: 4px;">Add</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Projects -->
+            <div id="projects" class="content-section">
+                <h1>Projects</h1>
+                <div class="info-card">
+                    <div id="projectDisplay">
+                        {% for project in projects %}
+                        <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; position: relative;">
+                            <h3>{{ project.title }}</h3>
+                            <p style="margin-top: 5px; color: #555;">{{ project.description }}</p>
+                            {% if project.link %}
+                            <p style="margin-top: 5px;"><a href="{{ project.link }}" target="_blank" style="color: #2b57f0; text-decoration: underline;">Project Link</a></p>
+                            {% endif %}
+                            <form method="POST" action="{% url 'delete_profile_project' project.id %}" style="display: inline; position: absolute; right: 10px; top: 10px;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 14px; font-weight: bold;">✕ Delete</button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p>No projects added yet.</p>
+                        {% endfor %}
+                        <button class="btn" style="margin-top: 15px;" onclick="toggleEdit('project')">+ Add Project</button>
+                    </div>
+                    <div id="projectEdit" style="display: none;">
+                        <form method="POST" action="{% url 'add_profile_project' %}">
+                            {% csrf_token %}
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Project Title</label>
+                                <input type="text" name="title" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Description</label>
+                                <textarea name="description" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Project Link (URL)</label>
+                                <input type="url" name="link" placeholder="https://github.com/yourproject" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            </div>
+                            <button type="submit" class="btn" style="margin-top: 10px; margin-right: 10px;">Add</button>
+                            <button type="button" class="btn" style="margin-top: 10px; background-color: #6c757d;" onclick="toggleEdit('project')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div id="certifications" class="content-section">
+                <h1>Certifications</h1>
+                <div class="info-card">
+                    <div id="certificationDisplay">
+                        {% for cert in certifications %}
+                        <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; position: relative;">
+                            <h3>{{ cert.name }}</h3>
+                            <p class="sub-text">Issuing Body: {{ cert.authority }}</p>
+                            <form method="POST" action="{% url 'delete_profile_certification' cert.id %}" style="display: inline; position: absolute; right: 10px; top: 10px;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 14px; font-weight: bold;">✕ Delete</button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p>No certifications added yet.</p>
+                        {% endfor %}
+                        <button class="btn" style="margin-top: 15px;" onclick="toggleEdit('certification')">+ Add Certification</button>
+                    </div>
+                    <div id="certificationEdit" style="display: none;">
+                        <form method="POST" action="{% url 'add_profile_certification' %}">
+                            {% csrf_token %}
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Certification Name</label>
+                                <input type="text" name="name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Issuing Authority</label>
+                                <input type="text" name="authority" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                            </div>
+                            <button type="submit" class="btn" style="margin-top: 10px; margin-right: 10px;">Add</button>
+                            <button type="button" class="btn" style="margin-top: 10px; background-color: #6c757d;" onclick="toggleEdit('certification')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extra Activities -->
+            <div id="extra" class="content-section">
+                <h1>Extra Activities</h1>
+                <div class="info-card">
+                    <div id="activityDisplay">
+                        {% for act in activities %}
+                        <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; position: relative;">
+                            <p>{{ act.description }}</p>
+                            <form method="POST" action="{% url 'delete_profile_activity' act.id %}" style="display: inline; position: absolute; right: 10px; top: 10px;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 14px; font-weight: bold;">✕ Delete</button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p>No extra-curricular activities added yet.</p>
+                        {% endfor %}
+                        <button class="btn" style="margin-top: 15px;" onclick="toggleEdit('activity')">+ Add Activity</button>
+                    </div>
+                    <div id="activityEdit" style="display: none;">
+                        <form method="POST" action="{% url 'add_profile_activity' %}">
+                            {% csrf_token %}
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Activity Description</label>
+                                <textarea name="description" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required></textarea>
+                            </div>
+                            <button type="submit" class="btn" style="margin-top: 10px; margin-right: 10px;">Add</button>
+                            <button type="button" class="btn" style="margin-top: 10px; background-color: #6c757d;" onclick="toggleEdit('activity')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resume -->
+            <div id="resume" class="content-section">
+                <h1>Resume</h1>
+                <div class="info-card">
+                    <div id="resumeList" style="margin-bottom: 20px;">
+                        {% for resume in resumes %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                            <p>📄 <a href="{{ resume.file.url }}" target="_blank" style="color: #2b57f0; text-decoration: underline; font-weight: bold;">Resume uploaded on {{ resume.uploaded_at|date:"M d, Y" }}</a></p>
+                            <form method="POST" action="{% url 'delete_profile_resume' resume.id %}">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 14px; font-weight: bold;">✕ Delete</button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p>No resume uploaded yet.</p>
+                        {% endfor %}
+                    </div>
+                    <form method="POST" action="{% url 'upload_profile_resume' %}" enctype="multipart/form-data" style="max-width: 400px;">
+                        {% csrf_token %}
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Upload PDF/Word Resume</label>
+                            <input type="file" name="resume_file" accept=".pdf,.doc,.docx" style="width: 100%;" required>
+                        </div>
+                        <button type="submit" class="btn" style="margin-top: 5px;">Upload</button>
+                    </form>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <script src="{% static 'Student/js/profile.js' %}"></script>
+    <script>
+        // Toggle view/edit display block for sub sections
+        function toggleEdit(section) {
+            const displayDiv = document.getElementById(`${section}Display`);
+            const editDiv = document.getElementById(`${section}Edit`);
+            if (displayDiv.style.display === 'none') {
+                displayDiv.style.display = 'block';
+                editDiv.style.display = 'none';
+            } else {
+                displayDiv.style.display = 'none';
+                editDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
