@@ -1,5 +1,53 @@
 # HireLink - Hybrid Campus Placement System
 
+Project Authors(Team members and contribution)
+### 1. Saurabh Bhosale
+**Role:** Recruiter/Employer Module & Frontend Development
+
+- Developed the Recruiter/Employer module
+- Designed and developed recruiter login
+- Developed recruiter dashboard
+- Developed job posting and job management pages
+- Developed applicant management functionality
+- Developed interview management pages
+- Developed company profile and settings pages
+- Worked with HTML, CSS and JavaScript
+- Git/GitHub collaboration and frontend integration
+
+### 2. Tanmay Dahivalikar
+**Role:** Student Module & Frontend Development
+
+- Developed the Student module
+- Student registration and login
+- Student profile management
+- Job browsing and searching
+- Job filtering
+- Job application functionality
+- Resume upload functionality
+- Student-side frontend development
+
+### 3. Bhageshree Giri
+**Role:** TPO Module & Placement Management
+
+- Developed the TPO module
+- TPO dashboard
+- Job posting approval/rejection
+- Student and recruiter management
+- Application monitoring
+- Placement monitoring
+- TPO-side frontend development
+
+### 4. Omkar Ingale
+**Role:** Backend & Database Development
+
+- Developed Django backend functionality
+- Designed database models
+- Implemented authentication and authorization
+- Database integration
+- Django migrations
+- Backend logic and integration
+- Testing and debugging
+
 HireLink is a unified, secure campus recruitment and placement drive management portal designed to streamline interactions between **Students**, **Recruiters**, and **TPO Admins (Training and Placement Officers)**. It automates registration, job postings, eligibility vetting, application processing, interview scheduling, and placement analytics.
 
 ---
